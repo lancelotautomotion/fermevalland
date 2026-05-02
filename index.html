@@ -124,7 +124,7 @@ const Header = () => {
           <a href="#produits" className={`transition ${scrolled ? "hover:text-forest-900" : "hover:text-white"}`}>Caissettes</a>
           <a href="#reserver" className={`transition ${scrolled ? "hover:text-forest-900" : "hover:text-white"}`}>Réserver</a>
         </nav>
-        <a href="#reserver" className="group inline-flex items-center gap-2 bg-terracotta-500 hover:bg-terracotta-600 text-cream-50 px-5 py-2.5 rounded-full text-sm font-medium tracking-wide transition shadow-sm shadow-terracotta-500/20">
+        <a href="commande.html" className="group inline-flex items-center gap-2 bg-terracotta-500 hover:bg-terracotta-600 text-cream-50 px-5 py-2.5 rounded-full text-sm font-medium tracking-wide transition shadow-sm shadow-terracotta-500/20">
           Commander
           <Icon name="ArrowUpRight" size={16} className="transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
         </a>
@@ -422,7 +422,7 @@ const Produits = () => {
                 <p className={`font-display italic text-base ${b.featured ? "text-cream-50" : "text-forest-800"}`}>
                   {b.note}
                 </p>
-                <a href="#reserver" className={`mt-auto inline-flex items-center justify-between gap-2 px-5 py-3 rounded-full text-sm transition ${
+                <a href="commande.html" className={`mt-auto inline-flex items-center justify-between gap-2 px-5 py-3 rounded-full text-sm transition ${
               b.featured ?
               "bg-cream-50 text-forest-900 hover:bg-cream-100" :
               "bg-forest-900 text-cream-50 hover:bg-forest-800"}`
@@ -516,7 +516,7 @@ const Reservation = () => {
 
             {/* THE huge CTA */}
             <div className="mt-14 flex flex-col sm:flex-row items-start sm:items-center gap-6">
-              <a href="mailto:bonjour@val-lands.fr?subject=Réservation caissette 2026"
+              <a href="commande.html"
               className="group relative inline-flex items-center gap-5 bg-cream-50 hover:bg-white text-forest-900 pl-8 pr-4 py-5 rounded-full text-lg lg:text-xl font-medium tracking-tight transition shadow-2xl shadow-terracotta-900/30">
                 <span>Réserver ma caissette en ligne</span>
                 <span className="w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-forest-900 text-cream-50 inline-flex items-center justify-center transition group-hover:scale-105 group-hover:rotate-[-8deg]">

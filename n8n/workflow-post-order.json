@@ -85,7 +85,7 @@
     {
       "parameters": {
         "mode": "runOnceForAllItems",
-        "jsCode": "// Récupère la commande depuis le webhook\nconst order = $('Webhook POST Commande').first().json;\n\n// Déduit les quantités commandées ligne par ligne\nconst rows = $input.all();\nreturn rows.map(row => {\n  let qty = Number(row.json.quantite) || 0;\n\n  // Déduire 1 caissette si le produit correspond\n  if (order.caissette && row.json.produit === order.caissette) {\n    qty = Math.max(0, qty - 1);\n  }\n\n  // Déduire les steaks hachés\n  if (row.json.produit === 'steaks_haches' && order.steaks_haches_qty > 0) {\n    qty = Math.max(0, qty - Number(order.steaks_haches_qty));\n  }\n\n  return { json: { produit: row.json.produit, quantite: qty } };\n});"
+        "jsCode": "const order = $('Webhook POST Commande').first().json;\nconst rows = $input.all();\nreturn rows.map(row => {\n  let qty = Number(row.json.quantite) || 0;\n  if (order.caissette && row.json.produit === order.caissette) {\n    qty = Math.max(0, qty - 1);\n  }\n  if (row.json.produit === 'steaks_haches' && order.steaks_haches_qty > 0) {\n    qty = Math.max(0, qty - Number(order.steaks_haches_qty));\n  }\n  return { json: { produit: row.json.produit, quantite: qty } };\n});"
       },
       "id": "b2c3d4e5-0004-4000-8000-000000000004",
       "name": "Calculer nouveau stock",
@@ -177,7 +177,7 @@
           "conditions": [
             {
               "id": "cond-newsletter-consent",
-              "leftValue": "={{ $('Webhook POST Commande').item.json.newsletter_consent }}",
+              "leftValue": "={{ $('Webhook POST Commande').first().json.newsletter_consent }}",
               "rightValue": true,
               "operator": {
                 "type": "boolean",
@@ -213,9 +213,9 @@
           "mappingMode": "defineBelow",
           "value": {
             "date_consentement": "={{ $now.format('dd/MM/yyyy HH:mm') }}",
-            "prenom": "={{ $('Webhook POST Commande').item.json.prenom }}",
-            "nom": "={{ $('Webhook POST Commande').item.json.nom }}",
-            "email": "={{ $('Webhook POST Commande').item.json.email }}"
+            "prenom": "={{ $('Webhook POST Commande').first().json.prenom }}",
+            "nom": "={{ $('Webhook POST Commande').first().json.nom }}",
+            "email": "={{ $('Webhook POST Commande').first().json.email }}"
           },
           "matchingColumns": [],
           "schema": [

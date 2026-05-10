@@ -52,7 +52,7 @@
 <script type="text/babel" data-presets="env,react">
 const { useEffect, useRef, useState } = React;
 
-// ─── Webhook URLs — remplacez par vos URLs n8n ───────────────────────────────
+// ─── Webhook URLs ─────────────────────────────────────────────────────────────
 const GET_STOCK_URL  = "https://n8n.srv792132.hstgr.cloud/webhook/get-stock";
 const POST_ORDER_URL = "https://n8n.srv792132.hstgr.cloud/webhook/post-order";
 
@@ -60,25 +60,18 @@ const POST_ORDER_URL = "https://n8n.srv792132.hstgr.cloud/webhook/post-order";
 const CAISSETTES = [
   {
     id: "caissette_5kg",
-    label: "Découverte", weight: "5 kg", price: "≈ 95 €",
-    pieces: "Steaks, bourguignon, haché",
+    label: "Découverte", weight: "5 kg", price: "≈ 90 €", priceKg: "18 €/kg",
+    pieces: "Bourguignon, pot au feu, beefsteak, bavette, steaks hachés",
     note: "Idéale pour découvrir.",
     stockKey: "caissette_5kg",
   },
   {
     id: "caissette_10kg",
-    label: "Familiale", weight: "10 kg", price: "≈ 180 €",
-    pieces: "Rôtis, côtes, mijoté, haché",
+    label: "Familiale", weight: "10 kg", price: "≈ 180 €", priceKg: "18 €/kg",
+    pieces: "Côte de bœuf, basse côte, rôti à braisser, pièce à fondu, pot au feu, bourguignon, beefsteak, bavette, steaks hachés",
     note: "Notre format le plus demandé.",
     stockKey: "caissette_10kg",
     featured: true,
-  },
-  {
-    id: "caissette_15kg",
-    label: "Demi-bête", weight: "15 kg", price: "≈ 260 €",
-    pieces: "Sélection complète, pièces nobles",
-    note: "Pour les grandes tablées.",
-    stockKey: "caissette_15kg",
   },
 ];
 
@@ -140,6 +133,7 @@ const CaissetteCard = ({ product, stock, loading, selected, onSelect }) => {
           <div className="text-[11px] uppercase tracking-[0.22em] text-earth-500 mb-1">{product.label}</div>
           <div className="font-display text-4xl text-forest-900 leading-none">{product.weight}</div>
           <div className="mt-2 font-display text-lg text-earth-600">{product.price}</div>
+          <div className="text-xs uppercase tracking-[0.18em] text-earth-400 mt-0.5">{product.priceKg}</div>
         </div>
         <div className="flex flex-col items-end gap-2 pt-0.5">
           <div className={[
@@ -257,30 +251,24 @@ const SuccessScreen = ({ prenom, caissette, steaks }) => (
 
 // ─── Formulaire principal ────────────────────────────────────────────────────
 const OrderForm = () => {
-  // Stock
   const [stock,        setStock]        = useState(null);
   const [stockLoading, setStockLoading] = useState(true);
   const [stockError,   setStockError]   = useState(false);
 
-  // Champs
   const [prenom,    setPrenom]    = useState("");
   const [nom,       setNom]       = useState("");
   const [email,     setEmail]     = useState("");
   const [telephone, setTelephone] = useState("");
 
-  // Produits
   const [caissette, setCaissette] = useState(null);
   const [steaks,    setSteaks]    = useState(0);
 
-  // RGPD
   const [newsletterConsent, setNewsletterConsent] = useState(false);
 
-  // Soumission
   const [errors,     setErrors]     = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted,  setSubmitted]  = useState(false);
 
-  // Chargement du stock au montage
   useEffect(() => {
     const ctrl = new AbortController();
     fetch(GET_STOCK_URL, { signal: ctrl.signal })
@@ -331,7 +319,7 @@ const OrderForm = () => {
       if (!res.ok) throw new Error();
       setSubmitted(true);
     } catch {
-      setErrors({ submit: "Erreur réseau — veuillez réessayer ou nous appeler au 04 71 ·· ·· ··." });
+      setErrors({ submit: "Erreur réseau — veuillez réessayer ou nous appeler au 07-83-51-78-94." });
     } finally {
       setSubmitting(false);
     }
@@ -347,7 +335,6 @@ const OrderForm = () => {
   return (
     <div className="min-h-screen bg-cream-50">
 
-      {/* ── En-tête ── */}
       <header className="bg-forest-900 text-cream-50 sticky top-0 z-40 shadow-md">
         <div className="max-w-3xl mx-auto px-6 lg:px-8 h-16 flex items-center justify-between">
           <a href="index.html" className="flex items-center gap-3">
@@ -360,7 +347,6 @@ const OrderForm = () => {
         </div>
       </header>
 
-      {/* ── Bandeau erreur stock ── */}
       {stockError && (
         <div className="bg-cream-200 border-b border-earth-300 px-6 py-3 text-sm text-earth-700 flex items-center justify-center gap-2">
           <Icon name="AlertTriangle" size={15} />
@@ -370,7 +356,6 @@ const OrderForm = () => {
 
       <main className="max-w-3xl mx-auto px-6 lg:px-8 py-12 lg:py-16">
 
-        {/* ── Titre ── */}
         <div className="mb-12">
           <div className="text-xs uppercase tracking-[0.3em] text-terracotta-500 flex items-center gap-3 mb-4">
             <span className="w-5 h-px bg-terracotta-400" />
@@ -388,7 +373,6 @@ const OrderForm = () => {
 
         <form onSubmit={handleSubmit} noValidate className="space-y-12">
 
-          {/* ══ Section 1 : Coordonnées ══════════════════════════════════════ */}
           <section>
             <h2 className="font-display text-2xl text-forest-800 pb-3 border-b border-earth-200 mb-7 flex items-center gap-3">
               <span className="w-7 h-7 rounded-full bg-forest-900 text-cream-50 text-xs font-sans font-semibold inline-flex items-center justify-center">1</span>
@@ -402,7 +386,6 @@ const OrderForm = () => {
             </div>
           </section>
 
-          {/* ══ Section 2 : Commande ═════════════════════════════════════════ */}
           <section>
             <h2 className="font-display text-2xl text-forest-800 pb-3 border-b border-earth-200 mb-7 flex items-center gap-3">
               <span className="w-7 h-7 rounded-full bg-forest-900 text-cream-50 text-xs font-sans font-semibold inline-flex items-center justify-center">2</span>
@@ -416,13 +399,12 @@ const OrderForm = () => {
               </div>
             )}
 
-            {/* Caissettes */}
             <div className="mb-8">
               <h3 className="text-[11px] font-semibold uppercase tracking-[0.25em] text-earth-500 mb-4 flex items-center gap-2">
                 <Icon name="Package" size={13} strokeWidth={1.8} />
                 Caissettes de viande Highland
               </h3>
-              <div className="grid sm:grid-cols-3 gap-4">
+              <div className="grid sm:grid-cols-2 gap-4">
                 {CAISSETTES.map(p => (
                   <CaissetteCard
                     key={p.id}
@@ -439,7 +421,6 @@ const OrderForm = () => {
               </p>
             </div>
 
-            {/* Steaks hachés */}
             <div className="p-6 rounded-xl border-2 border-earth-200 bg-white">
               <div className="flex items-start justify-between gap-4 flex-wrap mb-5">
                 <div>
@@ -457,14 +438,12 @@ const OrderForm = () => {
             </div>
           </section>
 
-          {/* ══ Section 3 : RGPD ════════════════════════════════════════════ */}
           <section>
             <h2 className="font-display text-2xl text-forest-800 pb-3 border-b border-earth-200 mb-7 flex items-center gap-3">
               <span className="w-7 h-7 rounded-full bg-forest-900 text-cream-50 text-xs font-sans font-semibold inline-flex items-center justify-center">3</span>
               Communications
             </h2>
 
-            {/* Checkbox newsletter */}
             <label className="flex items-start gap-3.5 cursor-pointer group select-none">
               <div className="relative mt-0.5 shrink-0">
                 <input
@@ -488,7 +467,6 @@ const OrderForm = () => {
               </span>
             </label>
 
-            {/* Mention légale RGPD */}
             <div className="mt-5 ml-8 pl-4 border-l-2 border-earth-200">
               <p className="text-[12px] text-earth-400 leading-relaxed">
                 Vos données (nom, prénom, email, téléphone) sont collectées uniquement pour traiter
@@ -497,8 +475,8 @@ const OrderForm = () => {
                 <strong className="font-medium">Règlement Général sur la Protection des Données (RGPD)</strong>,
                 vous disposez d'un droit d'accès, de rectification et de suppression, exerçable à
                 tout moment en écrivant à{" "}
-                <a href="mailto:bonjour@val-lands.fr" className="underline hover:text-earth-600 transition">
-                  bonjour@val-lands.fr
+                <a href="mailto:lafermedesvallands@gmail.com" className="underline hover:text-earth-600 transition">
+                  lafermedesvallands@gmail.com
                 </a>.
                 Si vous avez coché la case ci-dessus, vous pourrez vous désabonner en un clic
                 depuis chaque email reçu.
@@ -506,7 +484,6 @@ const OrderForm = () => {
             </div>
           </section>
 
-          {/* ══ Erreur soumission ════════════════════════════════════════════ */}
           {errors.submit && (
             <div className="flex items-start gap-3 bg-terracotta-50 border border-terracotta-200 text-terracotta-700 text-sm px-5 py-4 rounded-xl">
               <Icon name="AlertTriangle" size={16} />
@@ -514,7 +491,6 @@ const OrderForm = () => {
             </div>
           )}
 
-          {/* ══ Bouton d'envoi ═══════════════════════════════════════════════ */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 pt-2">
             <button
               type="submit"
@@ -549,8 +525,8 @@ const OrderForm = () => {
 
       <footer className="bg-forest-900 text-cream-100/50 py-6 mt-16 text-center text-xs">
         © 2026 Ferme des Val'Lands ·{" "}
-        <a href="mailto:bonjour@val-lands.fr" className="hover:text-cream-100 transition">bonjour@val-lands.fr</a>
-        {" "}· 04 71 ·· ·· ··
+        <a href="mailto:lafermedesvallands@gmail.com" className="hover:text-cream-100 transition">lafermedesvallands@gmail.com</a>
+        {" "}· 07-83-51-78-94
       </footer>
     </div>
   );

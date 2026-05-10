@@ -160,8 +160,8 @@ const Hero = () =>
       </h1>
 
       <p className="mt-8 max-w-xl text-cream-100/85 text-lg lg:text-xl leading-relaxed font-light">
-        Élevage en plein air de vaches Highland sur les hauts plateaux du Velay.
-        Une viande rare, persillée, nourrie à l'herbe et au temps.
+        Élevage en plein air de vaches Highlands dans les gorges de l'Allier.
+        Une viande authentique, persillée, nourrie à l'herbe et au temps.
       </p>
 
       <div className="mt-10 flex flex-wrap items-center gap-4">
@@ -179,9 +179,9 @@ const Hero = () =>
 
       <div className="mt-auto pt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 lg:gap-10 max-w-3xl text-cream-50">
         {[
-      { k: "1 050 m", v: "Altitude des pâtures" },
+      { k: "1 000 m", v: "Altitude des pâtures" },
       { k: "100 %", v: "Plein air, toute l'année" },
-      { k: "36 mois", v: "Maturation lente" },
+      { k: "36 mois", v: "Croissance lente" },
       { k: "Vente", v: "Directe · sans intermédiaire" }].
       map((s, i) =>
       <div key={i} className="border-t border-cream-50/25 pt-4">
@@ -203,8 +203,8 @@ const Hero = () =>
 // ---------- Marquee ----------
 const Marquee = () => {
   const items = [
-  "Élevage paysan", "100% herbe & foin", "Saint-Christophe-d'Allier", "Race Highland · Kyloe",
-  "Vente directe", "Caissettes 5 / 10 / 15 kg", "Maturation longue", "Bien-être animal"];
+  "Élevage paysan", "100 % herbe et foin bio", "Saint-Christophe-d'Allier", "Race Highland · Kyloe",
+  "Vente directe", "Caissettes 5 / 10 kg", "Croissance lente", "Bien-être animal"];
 
   const row = [...items, ...items];
   return (
@@ -235,24 +235,28 @@ const Terroir = () =>
         </h2>
         <div className="hairline my-8" />
         <p className="text-earth-700 text-lg leading-relaxed">
-          À Saint-Christophe-d'Allier, perchée sur les contreforts du Massif du Devès,
-          notre ferme s'étend sur des prairies sauvages où soufflent les vents du Velay.
-          Ici, l'élevage prend le temps de la terre.
+          À Saint-Christophe-d'Allier, notre ferme familiale s'étend sur des prairies
+          naturelles aux fils des saisons. Ici l'élevage prend le temps de la terre.
         </p>
         <p className="text-earth-700 text-lg leading-relaxed mt-5">
-          Chaque parcelle est entretenue à la main, chaque animal est connu, nommé,
-          respecté. Nous croyons à un élevage paysan, ancré, sincère — où la qualité
-          se cultive dans la lenteur des saisons.
+          Chaque animal est entretenu, chaque animal est connu, nommé et respecté.
+          Nous croyons à un élevage paysan, ancré, naturel où la qualité se cultive
+          dans la lenteur des saisons.
         </p>
         <div className="mt-10 flex items-center gap-6">
           <div className="flex items-center gap-3 text-forest-800">
             <Icon name="Mountain" size={22} strokeWidth={1.4} />
-            <span className="font-display text-lg">1 050 m d'altitude</span>
+            <span className="font-display text-lg">1 000 m d'altitude</span>
           </div>
           <span className="w-px h-8 bg-earth-300" />
           <div className="flex items-center gap-3 text-forest-800">
-            <Icon name="Wind" size={22} strokeWidth={1.4} />
-            <span className="font-display text-lg">Plateau du Devès</span>
+            <Icon name="MapPin" size={22} strokeWidth={1.4} />
+            <span className="font-display text-lg">Les gorges de l'Allier</span>
+          </div>
+          <span className="w-px h-8 bg-earth-300" />
+          <div className="flex items-center gap-3 text-forest-800">
+            <Icon name="Users" size={22} strokeWidth={1.4} />
+            <span className="font-display text-lg">Agriculteur depuis 3 générations</span>
           </div>
         </div>
       </Reveal>
@@ -261,7 +265,7 @@ const Terroir = () =>
         <div className="grid grid-cols-6 grid-rows-6 gap-4 h-[560px]">
           <div className="col-span-4 row-span-4 relative overflow-hidden rounded-sm bg-earth-200">
             <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1400&q=80" alt="Paysage volcanique d'Auvergne" className="w-full h-full object-cover" onError={(e) => {e.currentTarget.style.display = 'none';}} />
-            <div className="absolute bottom-3 left-3 text-cream-50 text-[10px] uppercase tracking-[0.25em] bg-forest-900/40 backdrop-blur px-2 py-1 rounded">Plateau du Devès</div>
+            <div className="absolute bottom-3 left-3 text-cream-50 text-[10px] uppercase tracking-[0.25em] bg-forest-900/40 backdrop-blur px-2 py-1 rounded">Gorges de l'Allier</div>
           </div>
           <div className="col-span-2 row-span-3 relative overflow-hidden rounded-sm bg-earth-200">
             <img src="https://images.unsplash.com/photo-1546445317-29f4545e9d53?w=900&q=80" alt="Highland en gros plan" className="w-full h-full object-cover" onError={(e) => {e.currentTarget.style.display = 'none';}} />
@@ -269,7 +273,7 @@ const Terroir = () =>
           <div className="col-span-2 row-span-3 relative overflow-hidden rounded-sm bg-forest-700 text-cream-50 p-5 flex flex-col justify-between">
             <Icon name="Sprout" size={28} strokeWidth={1.4} />
             <div>
-              <div className="font-display text-3xl leading-none">2008</div>
+              <div className="font-display text-3xl leading-none">2021</div>
               <div className="text-xs uppercase tracking-[0.18em] mt-1 text-cream-100/80">Première installation</div>
             </div>
           </div>
@@ -288,9 +292,9 @@ const Terroir = () =>
 // ---------- Élevage ----------
 const Elevage = () => {
   const traits = [
-  { icon: "Snowflake", title: "Rusticité légendaire", body: "Originaires des Highlands écossais, elles affrontent neige et vent — un atout précieux dans les hivers du Velay." },
-  { icon: "Leaf", title: "100 % herbe & foin", body: "Aucun ensilage, aucun concentré industriel. Uniquement les prairies de la ferme et le foin récolté l'été." },
-  { icon: "Heart", title: "Croissance lente", body: "Trois ans en moyenne avant l'abattage. Une chair persillée, dense, marbrée naturellement." },
+  { icon: "Snowflake", title: "Rusticité légendaire", body: "Originaire des Highlands d'Écosse, elles affrontent neige et vent — un atout pour notre climat de haute montagne." },
+  { icon: "Leaf", title: "100 % herbe et foin bio", body: "Aucun ensilage, aucun concentré industriel. Uniquement les prairies de la ferme et le foin récolté l'été." },
+  { icon: "Heart", title: "Croissance lente", body: "Quatre ans en moyenne avant l'abattage. Une viande persillée, maigre et pauvre en cholestérol." },
   { icon: "Trees", title: "Plein air intégral", body: "Mises bas dans les prés, abris naturels, troupeau stable — un cadre de vie qui se goûte dans l'assiette." }];
 
   return (
@@ -319,9 +323,11 @@ const Elevage = () => {
             </h2>
           </div>
           <p className="lg:col-span-5 text-cream-100/80 text-lg leading-relaxed">
-            Reconnaissable à sa longue toison rousse et à ses cornes en lyre,
-            la Highland Cattle est une race ancienne, frugale et paisible.
-            Sa viande est l'une des plus appréciées des grandes tables européennes.
+            La Highland cattle est dotée d'une épaisse toison, elle ne développe pas
+            de gras sous-cutané pour se garder au chaud pendant la saison froide.
+            C'est une espèce très rustique à croissance lente et de petit gabarit.
+            Elle possède un beau persillage qui contribue à la tendresse, au goût et à
+            la jutosité de la viande pour une qualité gustative supérieure.
           </p>
         </div>
 
@@ -368,9 +374,8 @@ const Elevage = () => {
 // ---------- Produits ----------
 const Produits = () => {
   const boxes = [
-  { weight: "5 kg", label: "Découverte", price: "≈ 95 €", pieces: "Steaks, bourguignon, haché", note: "Idéale pour découvrir." },
-  { weight: "10 kg", label: "Familiale", price: "≈ 180 €", pieces: "Rôtis, côtes, mijoté, haché", note: "Notre format le plus demandé.", featured: true },
-  { weight: "15 kg", label: "Demi-bête", price: "≈ 260 €", pieces: "Sélection complète, pièces nobles", note: "Pour les grandes tablées." }];
+  { weight: "5 kg", label: "Découverte", price: "≈ 90 €", priceKg: "18 €/kg", pieces: "Bourguignon, pot au feu, beefsteak, bavette, steaks hachés", note: "Idéale pour découvrir." },
+  { weight: "10 kg", label: "Familiale", price: "≈ 180 €", priceKg: "18 €/kg", pieces: "Côte de bœuf, basse côte, rôti à braisser, pièce à fondu, pot au feu, bourguignon, beefsteak, bavette, steaks hachés", note: "Notre format le plus demandé.", featured: true }];
 
   return (
     <section id="produits" className="relative bg-cream-100 py-28 lg:py-40">
@@ -387,13 +392,13 @@ const Produits = () => {
             </h2>
           </div>
           <p className="lg:col-span-5 text-earth-700 text-lg leading-relaxed">
-            La vente directe, c'est un bête à la fois — partagée entre quelques familles.
+            La vente directe, c'est une bête à la fois — partagée entre quelques familles.
             Chaque caissette est préparée par notre boucher partenaire, sous vide,
             prête à congeler ou à savourer.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 gap-6 max-w-2xl">
           {boxes.map((b, i) =>
           <Reveal key={i} delay={i * 100}>
               <article className={`relative h-full p-8 lg:p-10 flex flex-col gap-6 transition border ${
@@ -413,6 +418,7 @@ const Produits = () => {
                 <div>
                   <div className="font-display text-6xl lg:text-7xl tracking-tight leading-none">{b.weight}</div>
                   <div className={`mt-3 font-display text-xl ${b.featured ? "text-cream-100/90" : "text-earth-700"}`}>{b.price}</div>
+                  <div className={`text-xs uppercase tracking-[0.18em] mt-1 ${b.featured ? "text-cream-100/60" : "text-earth-500"}`}>{b.priceKg}</div>
                 </div>
                 <div className={`hairline ${b.featured ? "opacity-40" : ""}`} />
                 <p className={`text-sm leading-relaxed ${b.featured ? "text-cream-100/80" : "text-earth-700"}`}>
@@ -438,7 +444,7 @@ const Produits = () => {
         {/* Trust row */}
         <div className="mt-20 grid sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 border-t border-earth-200 pt-12">
           {[
-          { i: "Truck", t: "Retrait à la ferme", s: "Ou livraison sur Le Puy & Brioude" },
+          { i: "Truck", t: "Retrait à la ferme", s: "Ou en livraison en fonction des commandes" },
           { i: "Snowflake", t: "Sous vide & congelé", s: "Conservation jusqu'à 12 mois" },
           { i: "ShieldCheck", t: "Traçabilité totale", s: "De la naissance à la caissette" },
           { i: "HandCoins", t: "Sans intermédiaire", s: "Vous payez le travail, pas la marge" }].
@@ -494,16 +500,16 @@ const Reservation = () => {
             </h2>
 
             <p className="mt-8 max-w-xl text-cream-50/90 text-lg lg:text-xl leading-relaxed">
-              Chaque année, nous proposons un nombre limité de caissettes,
-              issues d'une seule bête sélectionnée. Premier arrivé, premier servi —
-              et ce sera fini jusqu'à l'automne suivant.
+              Chaque année nous proposons un nombre limité de caissettes.
+              Premier arrivé, premier servi. S'il n'y a plus de caissette disponible,
+              votre commande sera prise en compte pour la prochaine découpe.
             </p>
 
             {/* steps */}
             <ol className="mt-12 grid sm:grid-cols-3 gap-6">
               {[
-              { n: "01", t: "Choisissez", s: "Format 5, 10 ou 15 kg." },
-              { n: "02", t: "Réservez", s: "Acompte de 30 % en ligne." },
+              { n: "01", t: "Choisissez", s: "Format 5 ou 10 kg." },
+              { n: "02", t: "Réservez", s: "Pas d'acompte demandé." },
               { n: "03", t: "Récupérez", s: "Retrait à la ferme ou livraison." }].
               map((s, i) =>
               <li key={i} className="border-t border-cream-50/40 pt-4">
@@ -524,8 +530,8 @@ const Reservation = () => {
                 </span>
               </a>
               <div className="text-cream-50/85 text-sm leading-snug">
-                <div className="flex items-center gap-2"><Icon name="ShieldCheck" size={14} /> Paiement sécurisé · Acompte 30%</div>
-                <div className="flex items-center gap-2 mt-1"><Icon name="Phone" size={14} /> Ou par téléphone : 04 71 ·· ·· ··</div>
+                <div className="flex items-center gap-2"><Icon name="ShieldCheck" size={14} /> Pas d'acompte demandé</div>
+                <div className="flex items-center gap-2 mt-1"><Icon name="Phone" size={14} /> Ou par téléphone : 07-83-51-78-94</div>
               </div>
             </div>
           </div>
@@ -554,9 +560,9 @@ const Reservation = () => {
               <div className="hairline my-6" />
 
               <dl className="space-y-3 text-sm">
-                <div className="flex justify-between"><dt className="text-earth-500 uppercase tracking-[0.18em] text-[10px]">Bête</dt><dd className="font-display">Highland · 36 mois</dd></div>
+                <div className="flex justify-between"><dt className="text-earth-500 uppercase tracking-[0.18em] text-[10px]">Bête</dt><dd className="font-display">Highland · 48 mois</dd></div>
                 <div className="flex justify-between"><dt className="text-earth-500 uppercase tracking-[0.18em] text-[10px]">Origine</dt><dd className="font-display">St-Christophe-d'Allier</dd></div>
-                <div className="flex justify-between"><dt className="text-earth-500 uppercase tracking-[0.18em] text-[10px]">Caissettes</dt><dd className="font-display">5 / 10 / 15 kg</dd></div>
+                <div className="flex justify-between"><dt className="text-earth-500 uppercase tracking-[0.18em] text-[10px]">Caissettes</dt><dd className="font-display">5 / 10 kg</dd></div>
                 <div className="flex justify-between"><dt className="text-earth-500 uppercase tracking-[0.18em] text-[10px]">Préparation</dt><dd className="font-display">Sous vide, congelée</dd></div>
               </dl>
 
@@ -616,8 +622,8 @@ const Footer = () =>
         <div className="lg:col-span-2">
           <div className="text-xs uppercase tracking-[0.3em] text-terracotta-300 mb-5">Contact</div>
           <ul className="space-y-2.5 text-cream-50">
-            <li className="flex items-center gap-2"><Icon name="Phone" size={14} /> 04 71 ·· ·· ··</li>
-            <li className="flex items-center gap-2"><Icon name="Mail" size={14} /> bonjour@val-lands.fr</li>
+            <li className="flex items-center gap-2"><Icon name="Phone" size={14} /> 07-83-51-78-94</li>
+            <li className="flex items-center gap-2"><Icon name="Mail" size={14} /> lafermedesvallands@gmail.com</li>
             <li className="flex items-center gap-2"><Icon name="Clock" size={14} /> Visites sur rdv</li>
           </ul>
         </div>

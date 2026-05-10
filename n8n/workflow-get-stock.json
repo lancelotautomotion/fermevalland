@@ -1,0 +1,104 @@
+{
+  "name": "Ferme Val'Lands — GET Stock",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "GET",
+        "path": "get-stock",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0001-4000-8000-000000000001",
+      "name": "Webhook GET Stock",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300],
+      "webhookId": "a1b2c3d4-0001-4000-8000-000000000099"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "documentId": {
+          "__rl": true,
+          "value": "VOTRE_SPREADSHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Stocks",
+          "mode": "name"
+        },
+        "filtersUI": {},
+        "options": {}
+      },
+      "id": "a1b2c3d4-0002-4000-8000-000000000002",
+      "name": "Lire feuille Stocks",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "// Transforme les lignes Google Sheets en objet JSON plat\n// Chaque ligne : { produit: \"caissettes_5kg\", quantite: 5 }\nconst rows = $input.all();\nconst stock = {};\nfor (const item of rows) {\n  const key = item.json.produit;\n  const val = Number(item.json.quantite);\n  stock[key] = isNaN(val) ? 0 : val;\n}\nreturn [{ json: stock }];"
+      },
+      "id": "a1b2c3d4-0003-4000-8000-000000000003",
+      "name": "Formater JSON stock",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [720, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ JSON.stringify($json) }}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              },
+              {
+                "name": "Cache-Control",
+                "value": "no-store"
+              }
+            ]
+          }
+        }
+      },
+      "id": "a1b2c3d4-0004-4000-8000-000000000004",
+      "name": "Répondre avec le stock",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [960, 300]
+    }
+  ],
+  "connections": {
+    "Webhook GET Stock": {
+      "main": [
+        [{ "node": "Lire feuille Stocks", "type": "main", "index": 0 }]
+      ]
+    },
+    "Lire feuille Stocks": {
+      "main": [
+        [{ "node": "Formater JSON stock", "type": "main", "index": 0 }]
+      ]
+    },
+    "Formater JSON stock": {
+      "main": [
+        [{ "node": "Répondre avec le stock", "type": "main", "index": 0 }]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a1b2c3d4-0005-4000-8000-000000000005",
+  "id": "a1b2c3d4-0006-4000-8000-000000000006",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "fermevalland"
+  }
+}

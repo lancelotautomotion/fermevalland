@@ -1,0 +1,285 @@
+{
+  "name": "Ferme Val'Lands — POST Commande",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "post-order",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "b2c3d4e5-0001-4000-8000-000000000001",
+      "name": "Webhook POST Commande",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 340],
+      "webhookId": "b2c3d4e5-0001-4000-8000-000000000099"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "VOTRE_SPREADSHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Commandes",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "submitted_at": "={{ $json.submitted_at }}",
+            "prenom": "={{ $json.prenom }}",
+            "nom": "={{ $json.nom }}",
+            "email": "={{ $json.email }}",
+            "telephone": "={{ $json.telephone }}",
+            "caissette": "={{ $json.caissette }}",
+            "steaks_haches_qty": "={{ $json.steaks_haches_qty }}",
+            "newsletter_consent": "={{ $json.newsletter_consent }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            { "id": "submitted_at",      "displayName": "submitted_at",      "required": false, "defaultMatch": false, "canBeUsedToMatch": false, "display": true, "type": "string", "removed": false },
+            { "id": "prenom",            "displayName": "prenom",            "required": false, "defaultMatch": false, "canBeUsedToMatch": false, "display": true, "type": "string", "removed": false },
+            { "id": "nom",               "displayName": "nom",               "required": false, "defaultMatch": false, "canBeUsedToMatch": false, "display": true, "type": "string", "removed": false },
+            { "id": "email",             "displayName": "email",             "required": false, "defaultMatch": false, "canBeUsedToMatch": false, "display": true, "type": "string", "removed": false },
+            { "id": "telephone",         "displayName": "telephone",         "required": false, "defaultMatch": false, "canBeUsedToMatch": false, "display": true, "type": "string", "removed": false },
+            { "id": "caissette",         "displayName": "caissette",         "required": false, "defaultMatch": false, "canBeUsedToMatch": false, "display": true, "type": "string", "removed": false },
+            { "id": "steaks_haches_qty", "displayName": "steaks_haches_qty", "required": false, "defaultMatch": false, "canBeUsedToMatch": false, "display": true, "type": "string", "removed": false },
+            { "id": "newsletter_consent","displayName": "newsletter_consent","required": false, "defaultMatch": false, "canBeUsedToMatch": false, "display": true, "type": "string", "removed": false }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b2c3d4e5-0002-4000-8000-000000000002",
+      "name": "Enregistrer en Commandes",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [480, 340]
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "documentId": {
+          "__rl": true,
+          "value": "VOTRE_SPREADSHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Stocks",
+          "mode": "name"
+        },
+        "filtersUI": {},
+        "options": {}
+      },
+      "id": "b2c3d4e5-0003-4000-8000-000000000003",
+      "name": "Lire stocks actuels",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [720, 340]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const order = $('Webhook POST Commande').first().json;\nconst rows = $input.all();\nreturn rows.map(row => {\n  let qty = Number(row.json.quantite) || 0;\n  if (order.caissette && row.json.produit === order.caissette) {\n    qty = Math.max(0, qty - 1);\n  }\n  if (row.json.produit === 'steaks_haches' && order.steaks_haches_qty > 0) {\n    qty = Math.max(0, qty - Number(order.steaks_haches_qty));\n  }\n  return { json: { produit: row.json.produit, quantite: qty } };\n});"
+      },
+      "id": "b2c3d4e5-0004-4000-8000-000000000004",
+      "name": "Calculer nouveau stock",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [960, 340]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "VOTRE_SPREADSHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Stocks",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "produit": "={{ $json.produit }}",
+            "quantite": "={{ $json.quantite }}"
+          },
+          "matchingColumns": ["produit"],
+          "schema": [
+            {
+              "id": "produit",
+              "displayName": "produit",
+              "required": false,
+              "defaultMatch": true,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "quantite",
+              "displayName": "quantite",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "removed": false
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b2c3d4e5-0005-4000-8000-000000000005",
+      "name": "Mettre à jour Stocks",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [1200, 340]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"success\": true}",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Access-Control-Allow-Origin",
+                "value": "*"
+              }
+            ]
+          }
+        }
+      },
+      "id": "b2c3d4e5-0006-4000-8000-000000000006",
+      "name": "Répondre succès",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1440, 340]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cond-newsletter-consent",
+              "leftValue": "={{ $('Webhook POST Commande').first().json.newsletter_consent }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "b2c3d4e5-0007-4000-8000-000000000007",
+      "name": "Newsletter consent ?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1680, 340]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "VOTRE_SPREADSHEET_ID",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Base Marketing",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "date_consentement": "={{ $now.format('dd/MM/yyyy HH:mm') }}",
+            "prenom": "={{ $('Webhook POST Commande').first().json.prenom }}",
+            "nom": "={{ $('Webhook POST Commande').first().json.nom }}",
+            "email": "={{ $('Webhook POST Commande').first().json.email }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            { "id": "date_consentement", "displayName": "date_consentement", "required": false, "defaultMatch": false, "canBeUsedToMatch": false, "display": true, "type": "string", "removed": false },
+            { "id": "prenom",            "displayName": "prenom",            "required": false, "defaultMatch": false, "canBeUsedToMatch": false, "display": true, "type": "string", "removed": false },
+            { "id": "nom",               "displayName": "nom",               "required": false, "defaultMatch": false, "canBeUsedToMatch": false, "display": true, "type": "string", "removed": false },
+            { "id": "email",             "displayName": "email",             "required": false, "defaultMatch": false, "canBeUsedToMatch": false, "display": true, "type": "string", "removed": false }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b2c3d4e5-0008-4000-8000-000000000008",
+      "name": "Ajouter en Base Marketing",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [1920, 240]
+    }
+  ],
+  "connections": {
+    "Webhook POST Commande": {
+      "main": [
+        [{ "node": "Enregistrer en Commandes", "type": "main", "index": 0 }]
+      ]
+    },
+    "Enregistrer en Commandes": {
+      "main": [
+        [{ "node": "Lire stocks actuels", "type": "main", "index": 0 }]
+      ]
+    },
+    "Lire stocks actuels": {
+      "main": [
+        [{ "node": "Calculer nouveau stock", "type": "main", "index": 0 }]
+      ]
+    },
+    "Calculer nouveau stock": {
+      "main": [
+        [{ "node": "Mettre à jour Stocks", "type": "main", "index": 0 }]
+      ]
+    },
+    "Mettre à jour Stocks": {
+      "main": [
+        [{ "node": "Répondre succès", "type": "main", "index": 0 }]
+      ]
+    },
+    "Répondre succès": {
+      "main": [
+        [{ "node": "Newsletter consent ?", "type": "main", "index": 0 }]
+      ]
+    },
+    "Newsletter consent ?": {
+      "main": [
+        [{ "node": "Ajouter en Base Marketing", "type": "main", "index": 0 }],
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "b2c3d4e5-0009-4000-8000-000000000009",
+  "id": "b2c3d4e5-0010-4000-8000-000000000010",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "fermevalland"
+  }
+}

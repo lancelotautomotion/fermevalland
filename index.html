@@ -197,7 +197,7 @@ const Header = () => {
           <div className="mt-5 space-y-2.5 text-sm text-earth-600">
             <a href="tel:0783517894" className="flex items-center gap-2.5 hover:text-forest-900 transition">
               <Icon name="Phone" size={14} strokeWidth={1.6} />
-              <span>07-83-51-78-94</span>
+              <span>07 83 51 78 94</span>
             </a>
             <a href="mailto:lafermedesvallands@gmail.com" className="flex items-center gap-2.5 hover:text-forest-900 transition">
               <Icon name="Mail" size={14} strokeWidth={1.6} />
@@ -568,7 +568,7 @@ const Reservation = () => {
               </a>
               <div className="text-cream-50/85 text-sm leading-snug">
                 <div className="flex items-center gap-2"><Icon name="ShieldCheck" size={14} /> Pas d'acompte demandé</div>
-                <div className="flex items-center gap-2 mt-1"><Icon name="Phone" size={14} /> Ou par téléphone : 07-83-51-78-94</div>
+                <div className="flex items-center gap-2 mt-1"><Icon name="Phone" size={14} /> Ou par téléphone : 07 83 51 78 94</div>
               </div>
             </div>
           </div>
@@ -621,7 +621,7 @@ const Footer = () =>
 <footer className="bg-forest-900 text-cream-100/80 pt-24 pb-10 grain">
     <div className="max-w-7xl mx-auto px-6 lg:px-10">
       <div className="grid lg:grid-cols-12 gap-12 pb-16 border-b border-cream-50/15">
-        <div className="lg:col-span-5">
+        <div className="lg:col-span-4">
           <Logo dark={true} />
           <p className="mt-6 text-cream-100/70 max-w-md leading-relaxed">
             Élevage paysan de vaches Highland en Haute-Loire.
@@ -639,18 +639,10 @@ const Footer = () =>
           <div className="text-xs uppercase tracking-[0.3em] text-terracotta-300 mb-5">Nous trouver</div>
           <address className="not-italic font-display text-cream-50 text-lg leading-snug">
             Ferme des Val'Lands<br />
-            Lieu-dit Les Vals<br />
+            Le Bourg<br />
             43340 Saint-Christophe-d'Allier<br />
             Haute-Loire · Auvergne
           </address>
-        </div>
-        <div className="lg:col-span-2">
-          <div className="text-xs uppercase tracking-[0.3em] text-terracotta-300 mb-5">Contact</div>
-          <ul className="space-y-2.5 text-cream-50">
-            <li className="flex items-center gap-2"><Icon name="Phone" size={14} /> 07-83-51-78-94</li>
-            <li className="flex items-center gap-2"><Icon name="Mail" size={14} /> lafermedesvallands@gmail.com</li>
-            <li className="flex items-center gap-2"><Icon name="Clock" size={14} /> Visites sur rdv</li>
-          </ul>
         </div>
         <div className="lg:col-span-2">
           <div className="text-xs uppercase tracking-[0.3em] text-terracotta-300 mb-5">Navigation</div>
@@ -661,20 +653,26 @@ const Footer = () =>
             <li><a href="#reserver" className="hover:text-cream-50">Réserver</a></li>
           </ul>
         </div>
-      </div>
-      <div className="py-12">
-        <div className="font-display text-cream-50/95 text-[clamp(3rem,14vw,16rem)] leading-[0.85] tracking-[-0.04em] flex items-baseline justify-between flex-wrap gap-x-6">
-          <span>Val'Lands</span>
-          <span className="italic font-light text-cream-50/30 text-[clamp(1rem,2vw,1.5rem)] tracking-widest uppercase">Auvergne · MMXXVI</span>
+        <div className="lg:col-span-3">
+          <div className="text-xs uppercase tracking-[0.3em] text-terracotta-300 mb-5">Contact</div>
+          <ul className="space-y-2.5 text-cream-50">
+            <li className="flex items-center gap-2"><Icon name="Phone" size={14} /> 07 83 51 78 94</li>
+            <li className="flex items-center gap-2 break-all"><Icon name="Mail" size={14} className="shrink-0" /> lafermedesvallands@gmail.com</li>
+            <li className="flex items-center gap-2"><Icon name="Clock" size={14} /> Visites sur rdv</li>
+          </ul>
         </div>
       </div>
-      <div className="flex flex-col md:flex-row justify-between gap-4 text-xs text-cream-100/50">
-        <div>© 2026 Ferme des Val'Lands · SIRET 000 000 000 00000</div>
-        <div className="flex flex-wrap gap-6">
-          <a href="#" className="hover:text-cream-50">Mentions légales</a>
-          <a href="#" className="hover:text-cream-50">Politique de confidentialité</a>
-          <a href="#" className="hover:text-cream-50">CGV</a>
+      <div className="pt-10 pb-6 border-b border-cream-50/15">
+        <div className="text-xs uppercase tracking-[0.3em] text-terracotta-300 mb-5">Mentions légales</div>
+        <div className="flex flex-wrap gap-6 text-sm text-cream-100/70">
+          <a href="#" className="hover:text-cream-50 transition">Mentions légales</a>
+          <a href="#" className="hover:text-cream-50 transition">Politique de confidentialité</a>
+          <a href="#" className="hover:text-cream-50 transition">CGV</a>
+          <a href="#" className="hover:text-cream-50 transition">Gestion des cookies</a>
         </div>
+      </div>
+      <div className="pt-8 text-xs text-cream-100/50">
+        © 2026 Ferme des Val'Lands · Tout droit protégé
       </div>
     </div>
   </footer>;

@@ -213,13 +213,16 @@ const Header = () => {
 const Hero = () =>
 <section id="top" className="relative min-h-[100svh] w-full overflow-hidden bg-forest-900 grain">
     <img
-    src="https://images.unsplash.com/photo-1500595046743-cd271d694d30?w=2400&q=80&auto=format&fit=crop"
+    src="Input/220115784_154503563448883_400629134349418524_n.jpg"
     alt="Vache Highland dans un pré d'Auvergne"
     className="absolute inset-0 w-full h-full object-cover opacity-80"
     onError={(e) => {e.currentTarget.style.display = 'none';}} />
+  
     <div className="absolute inset-0 bg-gradient-to-b from-forest-900/60 via-forest-900/30 to-forest-900/90" />
     <div className="absolute inset-0 bg-gradient-to-r from-forest-900/70 via-transparent to-transparent" />
+
     <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 pt-40 pb-20 lg:pt-48 lg:pb-28 min-h-[100svh] flex flex-col">
+      {/* eyebrow */}
       <div className="flex items-center gap-3 text-cream-100/80 text-xs uppercase tracking-[0.3em]">
         <span className="w-8 h-px bg-cream-100/60" />
         <Icon name="MapPin" size={14} />
@@ -321,11 +324,11 @@ const Terroir = () =>
       <Reveal delay={150} className="lg:col-span-7 order-1 lg:order-2">
         <div className="grid grid-cols-6 grid-rows-6 gap-3 sm:gap-4 h-[400px] sm:h-[480px] lg:h-[560px]">
           <div className="col-span-4 row-span-4 relative overflow-hidden rounded-sm bg-earth-200">
-            <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1400&q=80" alt="Paysage volcanique d'Auvergne" className="w-full h-full object-cover" onError={(e) => {e.currentTarget.style.display = 'none';}} />
+            <img src="Input/IMG_0960.jpg" alt="Troupeau de Highland dans les prés d'Auvergne" className="w-full h-full object-cover" onError={(e) => {e.currentTarget.style.display = 'none';}} />
             <div className="absolute bottom-3 left-3 text-cream-50 text-[10px] uppercase tracking-[0.25em] bg-forest-900/40 backdrop-blur px-2 py-1 rounded">Gorges de l'Allier</div>
           </div>
           <div className="col-span-2 row-span-3 relative overflow-hidden rounded-sm bg-earth-200">
-            <img src="https://images.unsplash.com/photo-1546445317-29f4545e9d53?w=900&q=80" alt="Highland en gros plan" className="w-full h-full object-cover" onError={(e) => {e.currentTarget.style.display = 'none';}} />
+            <img src="Input/whatsapp_farm.jpg" alt="Highland en gros plan" className="w-full h-full object-cover" onError={(e) => {e.currentTarget.style.display = 'none';}} />
           </div>
           <div className="col-span-2 row-span-3 relative overflow-hidden rounded-sm bg-forest-700 text-cream-50 p-5 flex flex-col justify-between">
             <Icon name="Sprout" size={28} strokeWidth={1.4} />
@@ -335,7 +338,7 @@ const Terroir = () =>
             </div>
           </div>
           <div className="col-span-3 row-span-2 relative overflow-hidden rounded-sm bg-earth-200">
-            <img src="https://images.unsplash.com/photo-1516467508483-a7212febe31a?w=1100&q=80" alt="Pâturage en Auvergne" className="w-full h-full object-cover" onError={(e) => {e.currentTarget.style.display = 'none';}} />
+            <img src="Input/IMG_0804.jpg" alt="Pâturage en Auvergne" className="w-full h-full object-cover" onError={(e) => {e.currentTarget.style.display = 'none';}} />
           </div>
           <div className="col-span-3 row-span-2 relative overflow-hidden rounded-sm bg-cream-200 p-5 flex items-end">
             <p className="font-display italic text-forest-800 text-xl leading-tight">"On n'élève pas le bétail, on l'accompagne."</p>
@@ -386,7 +389,7 @@ const Elevage = () => {
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
           <Reveal className="lg:col-span-5">
             <div className="relative aspect-[4/5] overflow-hidden rounded-sm bg-forest-800">
-              <img src="https://images.unsplash.com/photo-1570042225831-d98fa7577f1e?w=1200&q=80" alt="Vache Highland avec sa toison rousse" className="w-full h-full object-cover" onError={(e) => {e.currentTarget.style.display = 'none';}} />
+              <img src="Input/IMG_1968.jpg" alt="Vache Highland avec sa toison rousse" className="w-full h-full object-cover" onError={(e) => {e.currentTarget.style.display = 'none';}} />
               <div className="absolute top-4 left-4 right-4 flex items-center justify-between text-[10px] uppercase tracking-[0.25em] text-cream-50/90">
                 <span>Highland Cattle</span>
                 <span>Bos taurus · Kyloe</span>

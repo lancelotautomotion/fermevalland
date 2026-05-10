@@ -46,7 +46,6 @@
   .hairline { background: linear-gradient(90deg, transparent, rgba(34,49,28,.25), transparent); height:1px; }
   .reveal-up { opacity:0; transform:translateY(20px); transition: opacity .8s ease, transform .8s ease; }
   .reveal-up.in { opacity:1; transform:none; }
-  /* nicer focus rings */
   :focus-visible { outline: 2px solid #bf5a25; outline-offset: 2px; }
 </style>
 </head>
@@ -57,7 +56,6 @@
 
 const { useEffect, useRef, useState } = React;
 
-// ---------- Lucide helper ----------
 const Icon = ({ name, className = "", size = 20, strokeWidth = 1.6 }) => {
   const ref = useRef(null);
   useEffect(() => {
@@ -74,7 +72,6 @@ const Icon = ({ name, className = "", size = 20, strokeWidth = 1.6 }) => {
   return <span ref={ref} className="inline-flex" aria-hidden="true" />;
 };
 
-// ---------- Reveal on scroll ----------
 const Reveal = ({ children, className = "", delay = 0 }) => {
   const ref = useRef(null);
   useEffect(() => {
@@ -94,7 +91,6 @@ const Reveal = ({ children, className = "", delay = 0 }) => {
   return <div ref={ref} className={`reveal-up ${className}`}>{children}</div>;
 };
 
-// ---------- Logo ----------
 const Logo = ({ className = "", dark = false }) =>
 <a href="#top" className={`flex items-center gap-3 group ${className}`}>
     <img src="logofinal.png" alt="Ferme des Val'Lands" className="w-11 h-11 object-contain" />
@@ -104,8 +100,6 @@ const Logo = ({ className = "", dark = false }) =>
     </span>
   </a>;
 
-
-// ---------- Header ----------
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
   useEffect(() => {
@@ -130,10 +124,8 @@ const Header = () => {
         </a>
       </div>
     </header>);
-
 };
 
-// ---------- Hero ----------
 const Hero = () =>
 <section id="top" className="relative min-h-[100svh] w-full overflow-hidden bg-forest-900 grain">
     <img
@@ -141,29 +133,23 @@ const Hero = () =>
     alt="Vache Highland dans un pré d'Auvergne"
     className="absolute inset-0 w-full h-full object-cover opacity-80"
     onError={(e) => {e.currentTarget.style.display = 'none';}} />
-  
     <div className="absolute inset-0 bg-gradient-to-b from-forest-900/60 via-forest-900/30 to-forest-900/90" />
     <div className="absolute inset-0 bg-gradient-to-r from-forest-900/70 via-transparent to-transparent" />
-
     <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 pt-40 pb-20 lg:pt-48 lg:pb-28 min-h-[100svh] flex flex-col">
-      {/* eyebrow */}
       <div className="flex items-center gap-3 text-cream-100/80 text-xs uppercase tracking-[0.3em]">
         <span className="w-8 h-px bg-cream-100/60" />
         <Icon name="MapPin" size={14} />
         <span>Saint-Christophe-d'Allier · Haute-Loire</span>
       </div>
-
       <h1 className="font-display text-cream-50 mt-8 text-[clamp(3rem,9vw,9rem)] leading-[0.92] tracking-[-0.02em] font-[450]">
         Ferme des
         <br />
         <span className="italic font-[400]">Val'Lands</span>
       </h1>
-
       <p className="mt-8 max-w-xl text-cream-100/85 text-lg lg:text-xl leading-relaxed font-light">
         Élevage en plein air de vaches Highlands dans les gorges de l'Allier.
         Une viande authentique, persillée, nourrie à l'herbe et au temps.
       </p>
-
       <div className="mt-10 flex flex-wrap items-center gap-4">
         <a href="#produits" className="group inline-flex items-center gap-3 bg-cream-50 hover:bg-cream-100 text-forest-900 px-7 py-4 rounded-full text-base font-medium transition">
           Découvrir nos viandes
@@ -176,12 +162,11 @@ const Hero = () =>
           Notre histoire
         </a>
       </div>
-
       <div className="mt-auto pt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 lg:gap-10 max-w-3xl text-cream-50">
         {[
       { k: "1 000 m", v: "Altitude des pâtures" },
       { k: "100 %", v: "Plein air, toute l'année" },
-      { k: "36 mois", v: "Croissance lente" },
+      { k: "48 mois", v: "Croissance lente" },
       { k: "Vente", v: "Directe · sans intermédiaire" }].
       map((s, i) =>
       <div key={i} className="border-t border-cream-50/25 pt-4">
@@ -191,21 +176,16 @@ const Hero = () =>
       )}
       </div>
     </div>
-
-    {/* scroll cue */}
     <div className="absolute bottom-6 right-6 lg:right-10 z-10 text-cream-50/70 text-[11px] uppercase tracking-[0.3em] flex items-center gap-3">
       <span>Faites défiler</span>
       <span className="w-px h-10 bg-cream-50/50 animate-pulse" />
     </div>
   </section>;
 
-
-// ---------- Marquee ----------
 const Marquee = () => {
   const items = [
   "Élevage paysan", "100 % herbe et foin bio", "Saint-Christophe-d'Allier", "Race Highland · Kyloe",
   "Vente directe", "Caissettes 5 / 10 kg", "Croissance lente", "Bien-être animal"];
-
   const row = [...items, ...items];
   return (
     <div className="bg-forest-900 text-cream-100/80 py-5 overflow-hidden border-y border-forest-800">
@@ -218,10 +198,8 @@ const Marquee = () => {
         )}
       </div>
     </div>);
-
 };
 
-// ---------- Terroir / À propos ----------
 const Terroir = () =>
 <section id="terroir" className="relative bg-cream-50 py-28 lg:py-40">
     <div className="max-w-7xl mx-auto px-6 lg:px-10 grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
@@ -253,11 +231,6 @@ const Terroir = () =>
             <Icon name="MapPin" size={22} strokeWidth={1.4} />
             <span className="font-display text-lg">Les gorges de l'Allier</span>
           </div>
-          <span className="w-px h-8 bg-earth-300" />
-          <div className="flex items-center gap-3 text-forest-800">
-            <Icon name="Users" size={22} strokeWidth={1.4} />
-            <span className="font-display text-lg">Agriculteur depuis 3 générations</span>
-          </div>
         </div>
       </Reveal>
 
@@ -273,8 +246,8 @@ const Terroir = () =>
           <div className="col-span-2 row-span-3 relative overflow-hidden rounded-sm bg-forest-700 text-cream-50 p-5 flex flex-col justify-between">
             <Icon name="Sprout" size={28} strokeWidth={1.4} />
             <div>
-              <div className="font-display text-3xl leading-none">2021</div>
-              <div className="text-xs uppercase tracking-[0.18em] mt-1 text-cream-100/80">Première installation</div>
+              <div className="font-display text-3xl leading-none">3</div>
+              <div className="text-xs uppercase tracking-[0.18em] mt-1 text-cream-100/80">Générations d'agriculteurs</div>
             </div>
           </div>
           <div className="col-span-3 row-span-2 relative overflow-hidden rounded-sm bg-earth-200">
@@ -288,15 +261,12 @@ const Terroir = () =>
     </div>
   </section>;
 
-
-// ---------- Élevage ----------
 const Elevage = () => {
   const traits = [
   { icon: "Snowflake", title: "Rusticité légendaire", body: "Originaire des Highlands d'Écosse, elles affrontent neige et vent — un atout pour notre climat de haute montagne." },
   { icon: "Leaf", title: "100 % herbe et foin bio", body: "Aucun ensilage, aucun concentré industriel. Uniquement les prairies de la ferme et le foin récolté l'été." },
   { icon: "Heart", title: "Croissance lente", body: "Quatre ans en moyenne avant l'abattage. Une viande persillée, maigre et pauvre en cholestérol." },
   { icon: "Trees", title: "Plein air intégral", body: "Mises bas dans les prés, abris naturels, troupeau stable — un cadre de vie qui se goûte dans l'assiette." }];
-
   return (
     <section id="elevage" className="relative bg-forest-900 text-cream-50 py-28 lg:py-40 overflow-hidden grain">
       <div className="absolute inset-0 opacity-[0.07] pointer-events-none">
@@ -309,7 +279,6 @@ const Elevage = () => {
           <rect width="800" height="600" fill="url(#rows)" />
         </svg>
       </div>
-
       <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
         <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-end mb-16 lg:mb-24">
           <div className="lg:col-span-7">
@@ -330,7 +299,6 @@ const Elevage = () => {
             la jutosité de la viande pour une qualité gustative supérieure.
           </p>
         </div>
-
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
           <Reveal className="lg:col-span-5">
             <div className="relative aspect-[4/5] overflow-hidden rounded-sm bg-forest-800">
@@ -350,7 +318,6 @@ const Elevage = () => {
               </div>
             </div>
           </Reveal>
-
           <div className="lg:col-span-7 grid sm:grid-cols-2 gap-px bg-forest-700/60">
             {traits.map((t, i) =>
             <Reveal key={i} delay={i * 80} className="bg-forest-900 p-8 lg:p-10 flex flex-col gap-5">
@@ -368,15 +335,13 @@ const Elevage = () => {
         </div>
       </div>
     </section>);
-
 };
 
-// ---------- Produits ----------
 const Produits = () => {
+  const pieces = "Côte de bœuf, basse côte, rôti à braisser, pièce à fondu, pot au feu, bourguignon, beefsteak, bavette, steaks hachés";
   const boxes = [
-  { weight: "5 kg", label: "Découverte", price: "≈ 90 €", priceKg: "18 €/kg", pieces: "Bourguignon, pot au feu, beefsteak, bavette, steaks hachés", note: "Idéale pour découvrir." },
-  { weight: "10 kg", label: "Familiale", price: "≈ 180 €", priceKg: "18 €/kg", pieces: "Côte de bœuf, basse côte, rôti à braisser, pièce à fondu, pot au feu, bourguignon, beefsteak, bavette, steaks hachés", note: "Notre format le plus demandé.", featured: true }];
-
+  { weight: "5 kg",  label: "Découverte", price: "≈ 90 €",  priceKg: "18 €/kg", pieces, note: "Idéale pour découvrir." },
+  { weight: "10 kg", label: "Familiale",  price: "≈ 180 €", priceKg: "18 €/kg", pieces, note: "Notre format le plus demandé.", featured: true }];
   return (
     <section id="produits" className="relative bg-cream-100 py-28 lg:py-40">
       <div className="max-w-7xl mx-auto px-6 lg:px-10">
@@ -397,8 +362,7 @@ const Produits = () => {
             prête à congeler ou à savourer.
           </p>
         </div>
-
-        <div className="grid md:grid-cols-2 gap-6 max-w-2xl">
+        <div className="grid md:grid-cols-2 gap-6">
           {boxes.map((b, i) =>
           <Reveal key={i} delay={i * 100}>
               <article className={`relative h-full p-8 lg:p-10 flex flex-col gap-6 transition border ${
@@ -440,8 +404,6 @@ const Produits = () => {
             </Reveal>
           )}
         </div>
-
-        {/* Trust row */}
         <div className="mt-20 grid sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 border-t border-earth-200 pt-12">
           {[
           { i: "Truck", t: "Retrait à la ferme", s: "Ou en livraison en fonction des commandes" },
@@ -462,18 +424,13 @@ const Produits = () => {
         </div>
       </div>
     </section>);
-
 };
 
-// ---------- RESERVATION (the standout) ----------
 const Reservation = () => {
   return (
     <section id="reserver" className="relative bg-terracotta-500 text-cream-50 overflow-hidden grain">
-      {/* decorative graphic */}
       <div aria-hidden="true" className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full bg-terracotta-400/40 blur-3xl pointer-events-none" />
       <div aria-hidden="true" className="absolute -bottom-40 -left-20 w-[500px] h-[500px] rounded-full bg-terracotta-700/40 blur-3xl pointer-events-none" />
-
-      {/* top tape */}
       <div className="relative bg-terracotta-700 text-cream-100/90 text-[11px] uppercase tracking-[0.4em] py-3 overflow-hidden">
         <div className="marquee inline-flex whitespace-nowrap">
           {Array.from({ length: 14 }).map((_, i) =>
@@ -485,7 +442,6 @@ const Reservation = () => {
           )}
         </div>
       </div>
-
       <div className="relative max-w-7xl mx-auto px-6 lg:px-10 py-32 lg:py-44">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           <div className="lg:col-span-7">
@@ -493,19 +449,15 @@ const Reservation = () => {
               <span className="w-2 h-2 rounded-full bg-cream-50 animate-pulse" />
               Réservation 2026
             </div>
-
             <h2 className="font-display mt-6 text-[clamp(3rem,9vw,8rem)] leading-[0.9] tracking-[-0.02em]">
               Réservez<br />
               <span className="italic">votre caissette.</span>
             </h2>
-
             <p className="mt-8 max-w-xl text-cream-50/90 text-lg lg:text-xl leading-relaxed">
               Chaque année nous proposons un nombre limité de caissettes.
               Premier arrivé, premier servi. S'il n'y a plus de caissette disponible,
               votre commande sera prise en compte pour la prochaine découpe.
             </p>
-
-            {/* steps */}
             <ol className="mt-12 grid sm:grid-cols-3 gap-6">
               {[
               { n: "01", t: "Choisissez", s: "Format 5 ou 10 kg." },
@@ -519,8 +471,6 @@ const Reservation = () => {
                 </li>
               )}
             </ol>
-
-            {/* THE huge CTA */}
             <div className="mt-14 flex flex-col sm:flex-row items-start sm:items-center gap-6">
               <a href="commande.html"
               className="group relative inline-flex items-center gap-5 bg-cream-50 hover:bg-white text-forest-900 pl-8 pr-4 py-5 rounded-full text-lg lg:text-xl font-medium tracking-tight transition shadow-2xl shadow-terracotta-900/30">
@@ -535,17 +485,13 @@ const Reservation = () => {
               </div>
             </div>
           </div>
-
-          {/* ticket-style card */}
           <div className="lg:col-span-5">
             <div className="relative bg-cream-50 text-forest-900 p-8 lg:p-10 rounded-sm shadow-2xl shadow-terracotta-900/30 -rotate-1">
-              {/* perforation */}
               <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-between px-2 pointer-events-none">
                 <span className="w-4 h-4 rounded-full bg-terracotta-500 -translate-x-1/2" />
                 <span className="w-4 h-4 rounded-full bg-terracotta-500 translate-x-1/2" />
               </div>
               <div className="absolute inset-x-10 top-1/2 -translate-y-1/2 border-t border-dashed border-earth-300" />
-
               <div className="flex items-start justify-between">
                 <div>
                   <div className="text-[10px] uppercase tracking-[0.3em] text-earth-500">Bon de réservation</div>
@@ -556,16 +502,13 @@ const Reservation = () => {
                   <div className="font-display text-2xl mt-1">012 / 12</div>
                 </div>
               </div>
-
               <div className="hairline my-6" />
-
               <dl className="space-y-3 text-sm">
                 <div className="flex justify-between"><dt className="text-earth-500 uppercase tracking-[0.18em] text-[10px]">Bête</dt><dd className="font-display">Highland · 48 mois</dd></div>
                 <div className="flex justify-between"><dt className="text-earth-500 uppercase tracking-[0.18em] text-[10px]">Origine</dt><dd className="font-display">St-Christophe-d'Allier</dd></div>
                 <div className="flex justify-between"><dt className="text-earth-500 uppercase tracking-[0.18em] text-[10px]">Caissettes</dt><dd className="font-display">5 / 10 kg</dd></div>
                 <div className="flex justify-between"><dt className="text-earth-500 uppercase tracking-[0.18em] text-[10px]">Préparation</dt><dd className="font-display">Sous vide, congelée</dd></div>
               </dl>
-
               <div className="mt-12 pt-6 border-t border-dashed border-earth-300 flex items-end justify-between">
                 <div>
                   <div className="text-[10px] uppercase tracking-[0.3em] text-earth-500">À retirer</div>
@@ -577,7 +520,6 @@ const Reservation = () => {
                 </div>
               </div>
             </div>
-
             <div className="mt-6 flex items-center gap-3 text-cream-50/80 text-xs uppercase tracking-[0.25em]">
               <Icon name="Info" size={14} />
               <span>Bon valable une bête · saison 2026</span>
@@ -586,10 +528,8 @@ const Reservation = () => {
         </div>
       </div>
     </section>);
-
 };
 
-// ---------- Footer ----------
 const Footer = () =>
 <footer className="bg-forest-900 text-cream-100/80 pt-24 pb-10 grain">
     <div className="max-w-7xl mx-auto px-6 lg:px-10">
@@ -608,7 +548,6 @@ const Footer = () =>
           )}
           </div>
         </div>
-
         <div className="lg:col-span-3">
           <div className="text-xs uppercase tracking-[0.3em] text-terracotta-300 mb-5">Nous trouver</div>
           <address className="not-italic font-display text-cream-50 text-lg leading-snug">
@@ -618,7 +557,6 @@ const Footer = () =>
             Haute-Loire · Auvergne
           </address>
         </div>
-
         <div className="lg:col-span-2">
           <div className="text-xs uppercase tracking-[0.3em] text-terracotta-300 mb-5">Contact</div>
           <ul className="space-y-2.5 text-cream-50">
@@ -627,7 +565,6 @@ const Footer = () =>
             <li className="flex items-center gap-2"><Icon name="Clock" size={14} /> Visites sur rdv</li>
           </ul>
         </div>
-
         <div className="lg:col-span-2">
           <div className="text-xs uppercase tracking-[0.3em] text-terracotta-300 mb-5">Navigation</div>
           <ul className="space-y-2.5">
@@ -638,15 +575,12 @@ const Footer = () =>
           </ul>
         </div>
       </div>
-
-      {/* big wordmark */}
       <div className="py-12">
         <div className="font-display text-cream-50/95 text-[clamp(3rem,14vw,16rem)] leading-[0.85] tracking-[-0.04em] flex items-baseline justify-between flex-wrap gap-x-6">
           <span>Val'Lands</span>
           <span className="italic font-light text-cream-50/30 text-[clamp(1rem,2vw,1.5rem)] tracking-widest uppercase">Auvergne · MMXXVI</span>
         </div>
       </div>
-
       <div className="flex flex-col md:flex-row justify-between gap-4 text-xs text-cream-100/50">
         <div>© 2026 Ferme des Val'Lands · SIRET 000 000 000 00000</div>
         <div className="flex flex-wrap gap-6">
@@ -658,8 +592,6 @@ const Footer = () =>
     </div>
   </footer>;
 
-
-// ---------- App ----------
 const App = () =>
 <main className="bg-cream-50 text-forest-900">
     <Header />
@@ -671,7 +603,6 @@ const App = () =>
     <Reservation />
     <Footer />
   </main>;
-
 
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
 </script>

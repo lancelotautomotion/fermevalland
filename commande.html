@@ -27,12 +27,8 @@
           earth:     { 50:'#f8f4ee',100:'#ebe0cf',200:'#d3bfa1',300:'#b9a07b',400:'#9c8159',500:'#806842',600:'#604c2f',700:'#473722',800:'#312618',900:'#1f1810' },
           terracotta:{ 50:'#fdf1ec',100:'#fbdccf',200:'#f7b599',300:'#f28a63',400:'#ee6537',500:'#e74310',600:'#c5350c',700:'#9a290a',800:'#701d07',900:'#4a1305' },
         },
-        keyframes: {
-          spin: { to: { transform: 'rotate(360deg)' } },
-        },
-        animation: {
-          spin: 'spin 1s linear infinite',
-        },
+        keyframes: { spin: { to: { transform: 'rotate(360deg)' } } },
+        animation:  { spin: 'spin 1s linear infinite' },
       }
     }
   }
@@ -52,30 +48,29 @@
 <script type="text/babel" data-presets="env,react">
 const { useEffect, useRef, useState } = React;
 
-// ─── Webhook URLs ─────────────────────────────────────────────────────────────
 const GET_STOCK_URL  = "https://n8n.srv792132.hstgr.cloud/webhook/get-stock";
 const POST_ORDER_URL = "https://n8n.srv792132.hstgr.cloud/webhook/post-order";
 
-// ─── Catalogue produits ──────────────────────────────────────────────────────
+const PIECES = "Côte de bœuf, basse côte, rôti à braisser, pièce à fondu, pot au feu, bourguignon, beefsteak, bavette, steaks hachés";
+
 const CAISSETTES = [
   {
     id: "caissette_5kg",
     label: "Découverte", weight: "5 kg", price: "≈ 90 €", priceKg: "18 €/kg",
-    pieces: "Bourguignon, pot au feu, beefsteak, bavette, steaks hachés",
+    pieces: PIECES,
     note: "Idéale pour découvrir.",
     stockKey: "caissette_5kg",
   },
   {
     id: "caissette_10kg",
     label: "Familiale", weight: "10 kg", price: "≈ 180 €", priceKg: "18 €/kg",
-    pieces: "Côte de bœuf, basse côte, rôti à braisser, pièce à fondu, pot au feu, bourguignon, beefsteak, bavette, steaks hachés",
+    pieces: PIECES,
     note: "Notre format le plus demandé.",
     stockKey: "caissette_10kg",
     featured: true,
   },
 ];
 
-// ─── Icon (Lucide) ───────────────────────────────────────────────────────────
 const Icon = ({ name, size = 20, strokeWidth = 1.6, className = "" }) => {
   const ref = useRef(null);
   useEffect(() => {
@@ -91,7 +86,6 @@ const Icon = ({ name, size = 20, strokeWidth = 1.6, className = "" }) => {
   return <span ref={ref} className="inline-flex shrink-0" aria-hidden="true" />;
 };
 
-// ─── Badge stock ─────────────────────────────────────────────────────────────
 const StockBadge = ({ qty, loading }) => {
   if (loading)
     return <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-earth-100 text-earth-400 animate-pulse">···</span>;
@@ -103,12 +97,10 @@ const StockBadge = ({ qty, loading }) => {
   return <span className="text-[11px] px-2.5 py-0.5 rounded-full bg-forest-100 text-forest-700 font-medium">{qty} disponibles</span>;
 };
 
-// ─── Carte caissette ─────────────────────────────────────────────────────────
 const CaissetteCard = ({ product, stock, loading, selected, onSelect }) => {
   const qty     = loading ? null : (stock?.[product.stockKey] ?? null);
   const soldOut = !loading && qty !== null && qty === 0;
   const active  = selected === product.id;
-
   return (
     <button
       type="button"
@@ -127,7 +119,6 @@ const CaissetteCard = ({ product, stock, loading, selected, onSelect }) => {
           Recommandée
         </span>
       )}
-
       <div className="flex items-start justify-between gap-2">
         <div>
           <div className="text-[11px] uppercase tracking-[0.22em] text-earth-500 mb-1">{product.label}</div>
@@ -145,7 +136,6 @@ const CaissetteCard = ({ product, stock, loading, selected, onSelect }) => {
           <StockBadge qty={qty} loading={loading} />
         </div>
       </div>
-
       <div className="mt-4 pt-4 border-t border-earth-100">
         <div className="text-[11px] uppercase tracking-[0.18em] text-earth-400 mb-1.5">Composition</div>
         <div className="text-sm text-earth-700">{product.pieces}</div>
@@ -155,61 +145,38 @@ const CaissetteCard = ({ product, stock, loading, selected, onSelect }) => {
   );
 };
 
-// ─── Sélecteur quantité ──────────────────────────────────────────────────────
 const QuantityStepper = ({ value, onChange, max, disabled }) => (
   <div className="flex items-center gap-3">
-    <button
-      type="button"
-      onClick={() => onChange(Math.max(0, value - 1))}
-      disabled={disabled || value === 0}
-      className="w-9 h-9 rounded-full border border-earth-300 bg-white flex items-center justify-center text-earth-700 hover:border-forest-500 hover:text-forest-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
-    >
+    <button type="button" onClick={() => onChange(Math.max(0, value - 1))} disabled={disabled || value === 0}
+      className="w-9 h-9 rounded-full border border-earth-300 bg-white flex items-center justify-center text-earth-700 hover:border-forest-500 hover:text-forest-700 disabled:opacity-40 disabled:cursor-not-allowed transition">
       <Icon name="Minus" size={14} />
     </button>
     <span className="font-display text-2xl w-8 text-center text-forest-900 select-none">{value}</span>
-    <button
-      type="button"
-      onClick={() => onChange(Math.min(max, value + 1))}
-      disabled={disabled || value >= max}
-      className="w-9 h-9 rounded-full border border-earth-300 bg-white flex items-center justify-center text-earth-700 hover:border-forest-500 hover:text-forest-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
-    >
+    <button type="button" onClick={() => onChange(Math.min(max, value + 1))} disabled={disabled || value >= max}
+      className="w-9 h-9 rounded-full border border-earth-300 bg-white flex items-center justify-center text-earth-700 hover:border-forest-500 hover:text-forest-700 disabled:opacity-40 disabled:cursor-not-allowed transition">
       <Icon name="Plus" size={14} />
     </button>
-    {!disabled && max > 0 && (
-      <span className="text-xs text-earth-400">{max} disponibles</span>
-    )}
-    {!disabled && max === 0 && (
-      <span className="text-xs text-terracotta-600">Épuisé</span>
-    )}
+    {!disabled && max > 0 && <span className="text-xs text-earth-400">{max} disponibles</span>}
+    {!disabled && max === 0 && <span className="text-xs text-terracotta-600">Épuisé</span>}
   </div>
 );
 
-// ─── Champ de formulaire ─────────────────────────────────────────────────────
 const Field = ({ label, name, type = "text", value, onChange, error, required, placeholder, autoComplete }) => (
   <div>
     <label htmlFor={name} className="block text-sm font-medium text-forest-800 mb-1.5">
-      {label}
-      {required && <span className="text-terracotta-500 ml-0.5">*</span>}
+      {label}{required && <span className="text-terracotta-500 ml-0.5">*</span>}
     </label>
-    <input
-      id={name} name={name} type={type} value={value}
-      onChange={e => onChange(e.target.value)}
+    <input id={name} name={name} type={type} value={value} onChange={e => onChange(e.target.value)}
       required={required} placeholder={placeholder} autoComplete={autoComplete}
       className={[
         "w-full px-4 py-3 rounded-lg border bg-white text-forest-900 placeholder-earth-300",
         "focus:outline-none focus:ring-2 focus:ring-forest-400 focus:border-transparent transition",
         error ? "border-terracotta-400 ring-1 ring-terracotta-200" : "border-earth-300 hover:border-earth-400",
-      ].join(" ")}
-    />
-    {error && (
-      <p className="mt-1.5 text-xs text-terracotta-600 flex items-center gap-1">
-        <Icon name="AlertCircle" size={12} /> {error}
-      </p>
-    )}
+      ].join(" ")} />
+    {error && <p className="mt-1.5 text-xs text-terracotta-600 flex items-center gap-1"><Icon name="AlertCircle" size={12} /> {error}</p>}
   </div>
 );
 
-// ─── Écran de succès ─────────────────────────────────────────────────────────
 const SuccessScreen = ({ prenom, caissette, steaks }) => (
   <div className="min-h-screen bg-cream-50 flex items-center justify-center px-6 py-16">
     <div className="max-w-lg w-full text-center">
@@ -224,24 +191,12 @@ const SuccessScreen = ({ prenom, caissette, steaks }) => (
         Votre demande est bien enregistrée. Nous vous contacterons dans les 48 h
         pour confirmer la réservation et vous indiquer les modalités de paiement.
       </p>
-
       {(caissette || steaks > 0) && (
         <div className="mt-8 inline-flex flex-col gap-2 bg-forest-900 text-cream-50 px-7 py-5 rounded-2xl text-sm text-left">
-          {caissette && (
-            <div className="flex items-center gap-2.5">
-              <Icon name="Package" size={16} strokeWidth={1.5} />
-              <span>Caissette <strong>{caissette}</strong> réservée</span>
-            </div>
-          )}
-          {steaks > 0 && (
-            <div className="flex items-center gap-2.5">
-              <Icon name="ShoppingBag" size={16} strokeWidth={1.5} />
-              <span><strong>{steaks}</strong> pack{steaks > 1 ? "s" : ""} steak haché</span>
-            </div>
-          )}
+          {caissette && <div className="flex items-center gap-2.5"><Icon name="Package" size={16} strokeWidth={1.5} /><span>Caissette <strong>{caissette}</strong> réservée</span></div>}
+          {steaks > 0 && <div className="flex items-center gap-2.5"><Icon name="ShoppingBag" size={16} strokeWidth={1.5} /><span><strong>{steaks}</strong> pack{steaks > 1 ? "s" : ""} steak haché</span></div>}
         </div>
       )}
-
       <a href="index.html" className="mt-10 inline-flex items-center gap-2 text-forest-700 hover:text-forest-900 text-sm border-b border-forest-300 hover:border-forest-600 transition pb-0.5">
         <Icon name="ArrowLeft" size={15} /> Retour à l'accueil
       </a>
@@ -249,22 +204,17 @@ const SuccessScreen = ({ prenom, caissette, steaks }) => (
   </div>
 );
 
-// ─── Formulaire principal ────────────────────────────────────────────────────
 const OrderForm = () => {
   const [stock,        setStock]        = useState(null);
   const [stockLoading, setStockLoading] = useState(true);
   const [stockError,   setStockError]   = useState(false);
-
   const [prenom,    setPrenom]    = useState("");
   const [nom,       setNom]       = useState("");
   const [email,     setEmail]     = useState("");
   const [telephone, setTelephone] = useState("");
-
   const [caissette, setCaissette] = useState(null);
   const [steaks,    setSteaks]    = useState(0);
-
   const [newsletterConsent, setNewsletterConsent] = useState(false);
-
   const [errors,     setErrors]     = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [submitted,  setSubmitted]  = useState(false);
@@ -274,9 +224,7 @@ const OrderForm = () => {
     fetch(GET_STOCK_URL, { signal: ctrl.signal })
       .then(r => { if (!r.ok) throw new Error("stock_error"); return r.json(); })
       .then(data => { setStock(data); setStockLoading(false); })
-      .catch(err => {
-        if (err.name !== "AbortError") { setStockError(true); setStockLoading(false); }
-      });
+      .catch(err => { if (err.name !== "AbortError") { setStockError(true); setStockLoading(false); } });
     return () => ctrl.abort();
   }, []);
 
@@ -287,8 +235,7 @@ const OrderForm = () => {
     if (!email.trim())     e.email     = "Email requis";
     else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) e.email = "Format invalide";
     if (!telephone.trim()) e.telephone = "Téléphone requis";
-    if (!caissette && steaks === 0)
-      e.produit = "Sélectionnez au moins une caissette ou des steaks hachés.";
+    if (!caissette && steaks === 0) e.produit = "Sélectionnez au moins une caissette ou des steaks hachés.";
     return e;
   };
 
@@ -298,24 +245,14 @@ const OrderForm = () => {
     if (Object.keys(errs).length) { setErrors(errs); return; }
     setErrors({});
     setSubmitting(true);
-
     const payload = {
-      prenom:              prenom.trim(),
-      nom:                 nom.trim(),
-      email:               email.trim().toLowerCase(),
-      telephone:           telephone.trim(),
-      caissette:           caissette ?? null,
-      steaks_haches_qty:   steaks,
-      newsletter_consent:  newsletterConsent,
-      submitted_at:        new Date().toISOString(),
+      prenom: prenom.trim(), nom: nom.trim(),
+      email: email.trim().toLowerCase(), telephone: telephone.trim(),
+      caissette: caissette ?? null, steaks_haches_qty: steaks,
+      newsletter_consent: newsletterConsent, submitted_at: new Date().toISOString(),
     };
-
     try {
-      const res = await fetch(POST_ORDER_URL, {
-        method:  "POST",
-        headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify(payload),
-      });
+      const res = await fetch(POST_ORDER_URL, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       if (!res.ok) throw new Error();
       setSubmitted(true);
     } catch {
@@ -334,7 +271,6 @@ const OrderForm = () => {
 
   return (
     <div className="min-h-screen bg-cream-50">
-
       <header className="bg-forest-900 text-cream-50 sticky top-0 z-40 shadow-md">
         <div className="max-w-3xl mx-auto px-6 lg:px-8 h-16 flex items-center justify-between">
           <a href="index.html" className="flex items-center gap-3">
@@ -355,15 +291,13 @@ const OrderForm = () => {
       )}
 
       <main className="max-w-3xl mx-auto px-6 lg:px-8 py-12 lg:py-16">
-
         <div className="mb-12">
           <div className="text-xs uppercase tracking-[0.3em] text-terracotta-500 flex items-center gap-3 mb-4">
             <span className="w-5 h-px bg-terracotta-400" />
             Formulaire de commande · Saison 2026
           </div>
           <h1 className="font-display text-4xl lg:text-5xl text-forest-900 leading-[1.05] tracking-tight">
-            Réservez votre<br />
-            <span className="italic">caissette 2026.</span>
+            Réservez votre<br /><span className="italic">caissette 2026.</span>
           </h1>
           <p className="mt-4 text-earth-600 text-lg leading-relaxed max-w-xl">
             Remplissez le formulaire. Nous vous confirmons la réservation sous 48 h
@@ -372,7 +306,6 @@ const OrderForm = () => {
         </div>
 
         <form onSubmit={handleSubmit} noValidate className="space-y-12">
-
           <section>
             <h2 className="font-display text-2xl text-forest-800 pb-3 border-b border-earth-200 mb-7 flex items-center gap-3">
               <span className="w-7 h-7 rounded-full bg-forest-900 text-cream-50 text-xs font-sans font-semibold inline-flex items-center justify-center">1</span>
@@ -391,14 +324,11 @@ const OrderForm = () => {
               <span className="w-7 h-7 rounded-full bg-forest-900 text-cream-50 text-xs font-sans font-semibold inline-flex items-center justify-center">2</span>
               Votre commande
             </h2>
-
             {errors.produit && (
               <div className="mb-6 flex items-start gap-2.5 bg-terracotta-50 border border-terracotta-200 text-terracotta-700 text-sm px-4 py-3 rounded-lg">
-                <Icon name="AlertCircle" size={15} />
-                {errors.produit}
+                <Icon name="AlertCircle" size={15} />{errors.produit}
               </div>
             )}
-
             <div className="mb-8">
               <h3 className="text-[11px] font-semibold uppercase tracking-[0.25em] text-earth-500 mb-4 flex items-center gap-2">
                 <Icon name="Package" size={13} strokeWidth={1.8} />
@@ -406,21 +336,13 @@ const OrderForm = () => {
               </h3>
               <div className="grid sm:grid-cols-2 gap-4">
                 {CAISSETTES.map(p => (
-                  <CaissetteCard
-                    key={p.id}
-                    product={p}
-                    stock={stock}
-                    loading={stockLoading}
-                    selected={caissette}
-                    onSelect={setCaissette}
-                  />
+                  <CaissetteCard key={p.id} product={p} stock={stock} loading={stockLoading} selected={caissette} onSelect={setCaissette} />
                 ))}
               </div>
               <p className="mt-3 text-xs text-earth-400 flex items-center gap-1.5">
                 <Icon name="Info" size={12} /> Sélectionnez une seule caissette — ou aucune si vous ne prenez que des steaks.
               </p>
             </div>
-
             <div className="p-6 rounded-xl border-2 border-earth-200 bg-white">
               <div className="flex items-start justify-between gap-4 flex-wrap mb-5">
                 <div>
@@ -429,12 +351,7 @@ const OrderForm = () => {
                 </div>
                 <StockBadge qty={stockLoading ? null : steakQty} loading={stockLoading} />
               </div>
-              <QuantityStepper
-                value={steaks}
-                onChange={setSteaks}
-                max={steakQty}
-                disabled={stockLoading || steakQty === 0}
-              />
+              <QuantityStepper value={steaks} onChange={setSteaks} max={steakQty} disabled={stockLoading || steakQty === 0} />
             </div>
           </section>
 
@@ -443,83 +360,50 @@ const OrderForm = () => {
               <span className="w-7 h-7 rounded-full bg-forest-900 text-cream-50 text-xs font-sans font-semibold inline-flex items-center justify-center">3</span>
               Communications
             </h2>
-
             <label className="flex items-start gap-3.5 cursor-pointer group select-none">
               <div className="relative mt-0.5 shrink-0">
-                <input
-                  type="checkbox"
-                  checked={newsletterConsent}
-                  onChange={e => setNewsletterConsent(e.target.checked)}
-                  className="sr-only"
-                />
-                <div className={[
-                  "w-5 h-5 rounded border-2 flex items-center justify-center transition-all",
-                  newsletterConsent
-                    ? "bg-forest-600 border-forest-600"
-                    : "border-earth-300 bg-white group-hover:border-forest-400",
-                ].join(" ")}>
+                <input type="checkbox" checked={newsletterConsent} onChange={e => setNewsletterConsent(e.target.checked)} className="sr-only" />
+                <div className={["w-5 h-5 rounded border-2 flex items-center justify-center transition-all",
+                  newsletterConsent ? "bg-forest-600 border-forest-600" : "border-earth-300 bg-white group-hover:border-forest-400"].join(" ")}>
                   {newsletterConsent && <Icon name="Check" size={11} className="text-white" />}
                 </div>
               </div>
               <span className="text-sm text-earth-800 leading-relaxed">
-                J'accepte de recevoir les actualités et les prochaines dates de vente
-                de la Ferme des Val'Lands par email.
+                J'accepte de recevoir les actualités et les prochaines dates de vente de la Ferme des Val'Lands par email.
               </span>
             </label>
-
             <div className="mt-5 ml-8 pl-4 border-l-2 border-earth-200">
               <p className="text-[12px] text-earth-400 leading-relaxed">
-                Vos données (nom, prénom, email, téléphone) sont collectées uniquement pour traiter
-                votre commande et, si vous y consentez, pour vous informer de nos actualités.
-                Elles ne sont jamais transmises à des tiers. Conformément au{" "}
-                <strong className="font-medium">Règlement Général sur la Protection des Données (RGPD)</strong>,
-                vous disposez d'un droit d'accès, de rectification et de suppression, exerçable à
-                tout moment en écrivant à{" "}
-                <a href="mailto:lafermedesvallands@gmail.com" className="underline hover:text-earth-600 transition">
-                  lafermedesvallands@gmail.com
-                </a>.
-                Si vous avez coché la case ci-dessus, vous pourrez vous désabonner en un clic
-                depuis chaque email reçu.
+                Vos données (nom, prénom, email, téléphone) sont collectées uniquement pour traiter votre commande
+                et, si vous y consentez, pour vous informer de nos actualités. Elles ne sont jamais transmises à des tiers.
+                Conformément au <strong className="font-medium">RGPD</strong>, vous disposez d'un droit d'accès, de rectification
+                et de suppression, exerçable à tout moment en écrivant à{" "}
+                <a href="mailto:lafermedesvallands@gmail.com" className="underline hover:text-earth-600 transition">lafermedesvallands@gmail.com</a>.
+                Si vous avez coché la case ci-dessus, vous pourrez vous désabonner en un clic depuis chaque email reçu.
               </p>
             </div>
           </section>
 
           {errors.submit && (
             <div className="flex items-start gap-3 bg-terracotta-50 border border-terracotta-200 text-terracotta-700 text-sm px-5 py-4 rounded-xl">
-              <Icon name="AlertTriangle" size={16} />
-              {errors.submit}
+              <Icon name="AlertTriangle" size={16} />{errors.submit}
             </div>
           )}
 
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 pt-2">
-            <button
-              type="submit"
-              disabled={submitting}
-              className="group inline-flex items-center gap-4 bg-forest-800 hover:bg-forest-900 disabled:opacity-60 disabled:cursor-not-allowed text-cream-50 pl-7 pr-4 py-4 rounded-full text-base font-medium tracking-tight transition shadow-lg shadow-forest-900/20"
-            >
+            <button type="submit" disabled={submitting}
+              className="group inline-flex items-center gap-4 bg-forest-800 hover:bg-forest-900 disabled:opacity-60 disabled:cursor-not-allowed text-cream-50 pl-7 pr-4 py-4 rounded-full text-base font-medium tracking-tight transition shadow-lg shadow-forest-900/20">
               {submitting ? (
-                <>
-                  <span>Envoi en cours…</span>
-                  <span className="w-10 h-10 rounded-full bg-white/10 inline-flex items-center justify-center animate-spin">
-                    <Icon name="Loader2" size={18} />
-                  </span>
-                </>
+                <><span>Envoi en cours…</span><span className="w-10 h-10 rounded-full bg-white/10 inline-flex items-center justify-center animate-spin"><Icon name="Loader2" size={18} /></span></>
               ) : (
-                <>
-                  <span>Envoyer ma réservation</span>
-                  <span className="w-10 h-10 rounded-full bg-terracotta-500 text-cream-50 inline-flex items-center justify-center transition group-hover:scale-105 group-hover:rotate-[-6deg]">
-                    <Icon name="ArrowRight" size={18} />
-                  </span>
-                </>
+                <><span>Envoyer ma réservation</span><span className="w-10 h-10 rounded-full bg-terracotta-500 text-cream-50 inline-flex items-center justify-center transition group-hover:scale-105 group-hover:rotate-[-6deg]"><Icon name="ArrowRight" size={18} /></span></>
               )}
             </button>
-
             <div className="flex items-center gap-2 text-sm text-earth-500">
               <Icon name="ShieldCheck" size={15} strokeWidth={1.4} />
               Aucun paiement — confirmation par email ou téléphone
             </div>
           </div>
-
         </form>
       </main>
 

@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Ferme des Val'Lands — Élevage de vaches Highland en Auvergne</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;0,9..144,800;0,9..144,900;1,9..144,400;1,9..144,500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/lucide@0.344.0/dist/umd/lucide.min.js"></script>
+
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          serif: ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
+          sans: ['Outfit', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        },
+        colors: {
+          forest:    { 50:'#f3f6f1', 100:'#e3ebde', 200:'#c5d6bb', 300:'#9eb98d', 400:'#769962', 500:'#587c46', 600:'#436234', 700:'#344c29', 800:'#2a3d22', 900:'#22311c' },
+          cream:     { 50:'#fbf8f1', 100:'#f6efe1', 200:'#ece1c4', 300:'#decea0', 400:'#cdb479', 500:'#bd9a59' },
+          earth:     { 50:'#f8f4ee', 100:'#ebe0cf', 200:'#d3bfa1', 300:'#b9a07b', 400:'#9c8159', 500:'#806842', 600:'#604c2f', 700:'#473722', 800:'#312618', 900:'#1f1810' },
+          terracotta:{ 50:'#fdf1ec', 100:'#fbdccf', 200:'#f7b599', 300:'#f28a63', 400:'#ee6537', 500:'#e74310', 600:'#c5350c', 700:'#9a290a', 800:'#701d07', 900:'#4a1305' },
+        }
+      }
+    }
+  }
+</script>
+
+<style>
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Outfit', sans-serif; background: #fbf8f1; color: #22311c; }
+  .font-display { font-family: 'Fraunces', serif; font-optical-sizing: auto; font-variation-settings: "SOFT" 50, "WONK" 0; }
+  .grain { position: relative; }
+  .grain::after {
+    content:""; position:absolute; inset:0; pointer-events:none; opacity:.06; mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+  .marquee { animation: marquee 60s linear infinite; }
+  @keyframes marquee { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+  .hairline { background: linear-gradient(90deg, transparent, rgba(34,49,28,.25), transparent); height:1px; }
+  .reveal-up { opacity:0; transform:translateY(20px); transition: opacity .8s ease, transform .8s ease; }
+  .reveal-up.in { opacity:1; transform:none; }
+  :focus-visible { outline: 2px solid #bf5a25; outline-offset: 2px; }
+</style>
+</head>
+<body class="antialiased">
+<div id="root"></div>
+
+<script type="text/babel" data-presets="env,react">
+
+const { useEffect, useRef, useState } = React;
+
+const Icon = ({ name, className = "", size = 20, strokeWidth = 1.6 }) => {
+  const ref = useRef(null);
+  useEffect(() => {
+    if (ref.current && window.lucide) {
+      ref.current.innerHTML = "";
+      const svg = window.lucide.createElement(window.lucide.icons[name]);
+      svg.setAttribute("width", size);
+      svg.setAttribute("height", size);
+      svg.setAttribute("stroke-width", strokeWidth);
+      svg.setAttribute("class", className);
+      ref.current.appendChild(svg);
+    }
+  }, [name, className, size, strokeWidth]);
+  return <span ref={ref} className="inline-flex" aria-hidden="true" />;
+};
+
+const Reveal = ({ children, className = "", delay = 0 }) => {
+  const ref = useRef(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((e) => {
+        if (e.isIntersecting) {
+          setTimeout(() => el.classList.add("in"), delay);
+          io.unobserve(el);
+        }
+      });
+    }, { threshold: 0.15 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, [delay]);
+  return <div ref={ref} className={`reveal-up ${className}`}>{children}</div>;
+};
+
+const Logo = ({ className = "", dark = false }) =>
+<a href="#top" className={`flex items-center gap-3 group ${className}`}>
+    <img src="logofinal.png" alt="Ferme des Val'Lands" className="w-11 h-11 object-contain" />
+    <span className={`font-display text-[1.05rem] font-medium tracking-tight leading-none ${dark ? "text-cream-50" : "text-forest-900"}`}>Ferme des Val'Lands</span>
+  </a>;
+
+const Header = () => {
+  const [scrolled,  setScrolled]  = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 20);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
+  const navLinks = [
+    { href: "#terroir",  label: "Le terroir"  },
+    { href: "#elevage",  label: "L'élevage"   },
+    { href: "#produits", label: "Caissettes"  },
+    { href: "#reserver", label: "Réserver"    },
+  ];
+
+  return (
+    <>
+      <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${scrolled ? "bg-white border-b border-earth-200/60 shadow-sm" : "bg-transparent"}`}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 h-20 flex items-center justify-between">
+          <Logo dark={!scrolled} />
+          <nav className={`hidden md:flex items-center gap-8 text-sm transition-colors ${scrolled ? "text-forest-800/80" : "text-cream-50/90"}`}>
+            {navLinks.map(l =>
+              <a key={l.href} href={l.href} className={`transition ${scrolled ? "hover:text-forest-900" : "hover:text-white"}`}>{l.label}</a>
+            )}
+          </nav>
+          <div className="flex items-center gap-3">
+            <a href="commande.html" className="hidden md:inline-flex group items-center gap-2 bg-terracotta-500 hover:bg-terracotta-600 text-cream-50 px-5 py-2.5 rounded-full text-sm font-medium tracking-wide transition shadow-sm shadow-terracotta-500/20">
+              Commander
+              <Icon name="ArrowUpRight" size={16} className="transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </a>
+            <button
+              onClick={() => setMenuOpen(true)}
+              aria-label="Ouvrir le menu"
+              aria-expanded={menuOpen}
+              className={`md:hidden w-10 h-10 flex flex-col items-center justify-center gap-[5px] rounded-full transition focus-visible:ring-2 focus-visible:ring-terracotta-400 ${scrolled ? "text-forest-900 hover:bg-earth-100" : "text-cream-50 hover:bg-cream-50/10"}`}
+            >
+              <span className="w-5 h-px bg-current block rounded-full" />
+              <span className="w-5 h-px bg-current block rounded-full" />
+              <span className="w-5 h-px bg-current block rounded-full" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Backdrop */}
+      <div
+        onClick={() => setMenuOpen(false)}
+        aria-hidden="true"
+        className={`md:hidden fixed inset-0 z-[60] bg-forest-900/50 backdrop-blur-sm transition-opacity duration-300 ${menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+      />
+
+      {/* Sidebar drawer */}
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu de navigation"
+        className={`md:hidden fixed top-0 right-0 bottom-0 z-[70] w-[min(300px,85vw)] bg-cream-50 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${menuOpen ? "translate-x-0" : "translate-x-full"}`}
+      >
+        <div className="flex items-center justify-between px-6 h-20 border-b border-earth-200 shrink-0">
+          <Logo dark={false} />
+          <button
+            onClick={() => setMenuOpen(false)}
+            aria-label="Fermer le menu"
+            className="w-9 h-9 rounded-full hover:bg-earth-100 flex items-center justify-center text-forest-900 transition"
+          >
+            <Icon name="X" size={20} />
+          </button>
+        </div>
+        <nav aria-label="Menu principal" className="flex flex-col px-6 py-4 overflow-y-auto flex-1">
+          {navLinks.map(l =>
+            <a
+              key={l.href}
+              href={l.href}
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center justify-between font-display text-2xl text-forest-900 py-4 border-b border-earth-100 last:border-0 hover:text-terracotta-600 transition"
+            >
+              {l.label}
+              <Icon name="ChevronRight" size={18} className="text-earth-300" />
+            </a>
+          )}
+        </nav>
+        <div className="px-6 pb-8 pt-4 border-t border-earth-100 shrink-0">
+          <a
+            href="commande.html"
+            className="flex items-center justify-between bg-terracotta-500 hover:bg-terracotta-600 text-cream-50 px-6 py-4 rounded-full font-medium transition"
+          >
+            <span>Commander en ligne</span>
+            <Icon name="ArrowUpRight" size={18} />
+          </a>
+          <div className="mt-5 space-y-2.5 text-sm text-earth-600">
+            <a href="tel:0783517894" className="flex items-center gap-2.5 hover:text-forest-900 transition">
+              <Icon name="Phone" size={14} strokeWidth={1.6} />
+              <span>07-83-51-78-94</span>
+            </a>
+            <a href="mailto:lafermedesvallands@gmail.com" className="flex items-center gap-2.5 hover:text-forest-900 transition">
+              <Icon name="Mail" size={14} strokeWidth={1.6} />
+              <span>lafermedesvallands@gmail.com</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+};
+
+const Hero = () =>
+<section id="top" className="relative min-h-[100svh] w-full overflow-hidden bg-forest-900 grain">
+    <img
+    src="Input/220115784_154503563448883_400629134349418524_n.jpg"
+    alt="Vache Highland dans un pré d'Auvergne"
+    className="absolute inset-0 w-full h-full object-cover opacity-80"
+    onError={(e) => {e.currentTarget.style.display = 'none';}} />
+  
+    <div className="absolute inset-0 bg-gradient-to-b from-forest-900/60 via-forest-900/30 to-forest-900/90" />
+    <div className="absolute inset-0 bg-gradient-to-r from-forest-900/70 via-transparent to-transparent" />
+
+    <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 pt-40 pb-20 lg:pt-48 lg:pb-28 min-h-[100svh] flex flex-col">
+      {/* eyebrow */}
+      <div className="flex items-center gap-3 text-cream-100/80 text-xs uppercase tracking-[0.3em]">
+        <span className="w-8 h-px bg-cream-100/60" />
+        <Icon name="MapPin" size={14} />
+        <span>Saint-Christophe-d'Allier · Haute-Loire</span>
+      </div>
+      <h1 className="font-display text-cream-50 mt-8 text-[clamp(3rem,9vw,9rem)] leading-[0.92] tracking-[-0.02em] font-[450]">
+        Ferme des
+        <br />
+        <span className="italic font-[400]">Val'Lands</span>
+      </h1>
+      <p className="mt-8 max-w-xl text-cream-100/85 text-lg lg:text-xl leading-relaxed font-light">
+        Élevage en plein air de vaches Highlands dans les gorges de l'Allier.
+        Une viande authentique, persillée, nourrie à l'herbe et au temps.
+      </p>
+      <div className="mt-10 flex flex-wrap items-center gap-4">
+        <a href="#produits" className="group inline-flex items-center gap-3 bg-cream-50 hover:bg-cream-100 text-forest-900 px-7 py-4 rounded-full text-base font-medium transition">
+          Découvrir nos viandes
+          <span className="w-7 h-7 rounded-full bg-forest-900 text-cream-50 inline-flex items-center justify-center transition group-hover:translate-x-0.5">
+            <Icon name="ArrowRight" size={14} />
+          </span>
+        </a>
+        <a href="#terroir" className="inline-flex items-center gap-2 text-cream-50/90 hover:text-cream-50 px-2 py-4 text-sm tracking-wide border-b border-cream-50/30 hover:border-cream-50/80 transition">
+          <Icon name="Leaf" size={16} />
+          Notre histoire
+        </a>
+      </div>
+      <div className="mt-auto pt-16 grid grid-cols-2 sm:grid-cols-4 gap-6 lg:gap-10 max-w-3xl text-cream-50">
+        {[
+      { k: "1 000 m", v: "Altitude des pâtures" },
+      { k: "100 %", v: "Plein air, toute l'année" },
+      { k: "48 mois", v: "Croissance lente" },
+      { k: "Vente", v: "Directe · sans intermédiaire" }].
+      map((s, i) =>
+      <div key={i} className="border-t border-cream-50/25 pt-4">
+            <div className="font-display text-2xl lg:text-3xl tracking-tight">{s.k}</div>
+            <div className="text-xs uppercase tracking-[0.18em] text-cream-100/70 mt-1">{s.v}</div>
+          </div>
+      )}
+      </div>
+    </div>
+    <div className="absolute bottom-6 right-6 lg:right-10 z-10 text-cream-50/70 text-[11px] uppercase tracking-[0.3em] flex items-center gap-3">
+      <span>Faites défiler</span>
+      <span className="w-px h-10 bg-cream-50/50 animate-pulse" />
+    </div>
+  </section>;
+
+const Marquee = () => {
+  const items = [
+  "Élevage paysan", "100 % herbe et foin bio", "Saint-Christophe-d'Allier", "Race Highland · Kyloe",
+  "Vente directe", "Caissettes 5 / 10 kg", "Croissance lente", "Bien-être animal"];
+  const row = [...items, ...items];
+  return (
+    <div className="bg-forest-900 text-cream-100/80 py-5 overflow-hidden border-y border-forest-800">
+      <div className="marquee inline-flex whitespace-nowrap will-change-transform">
+        {row.map((t, i) =>
+        <span key={i} className="inline-flex items-center gap-6 px-8 font-display italic text-2xl tracking-tight">
+            {t}
+            <span className="text-terracotta-300">✺</span>
+          </span>
+        )}
+      </div>
+    </div>);
+};
+
+const Terroir = () =>
+<section id="terroir" className="relative bg-cream-50 py-28 lg:py-40">
+    <div className="max-w-7xl mx-auto px-6 lg:px-10 grid lg:grid-cols-12 gap-12 lg:gap-20 items-center">
+      <Reveal className="lg:col-span-5 order-2 lg:order-1">
+        <div className="text-xs uppercase tracking-[0.3em] text-terracotta-500 flex items-center gap-3">
+          <span className="w-6 h-px bg-terracotta-400" />
+          Le Terroir
+        </div>
+        <h2 className="font-display mt-5 text-5xl lg:text-6xl leading-[0.95] tracking-tight text-forest-900">
+          Une ferme à hauteur<br />de <span className="italic">volcans</span>.
+        </h2>
+        <div className="hairline my-8" />
+        <p className="text-earth-700 text-lg leading-relaxed">
+          À Saint-Christophe-d'Allier, notre ferme familiale s'étend sur des prairies
+          naturelles aux fils des saisons. Ici l'élevage prend le temps de la terre.
+        </p>
+        <p className="text-earth-700 text-lg leading-relaxed mt-5">
+          Chaque animal est entretenu, chaque animal est connu, nommé et respecté.
+          Nous croyons à un élevage paysan, ancré, naturel où la qualité se cultive
+          dans la lenteur des saisons.
+        </p>
+        <div className="mt-10 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
+          <div className="flex items-center gap-3 text-forest-800">
+            <Icon name="Mountain" size={22} strokeWidth={1.4} />
+            <span className="font-display text-lg">1 000 m d'altitude</span>
+          </div>
+          <span className="hidden sm:block w-px h-8 bg-earth-300" />
+          <div className="flex items-center gap-3 text-forest-800">
+            <Icon name="MapPin" size={22} strokeWidth={1.4} />
+            <span className="font-display text-lg">Les gorges de l'Allier</span>
+          </div>
+        </div>
+      </Reveal>
+
+      <Reveal delay={150} className="lg:col-span-7 order-1 lg:order-2">
+        <div className="grid grid-cols-2 sm:grid-cols-6 gap-3 sm:gap-4 grid-rows-[200px_160px_120px] sm:grid-rows-6 sm:h-[480px] lg:h-[560px]">
+          {/* Calves — zoomed in, no animation */}
+          <div className="col-span-2 sm:col-span-4 sm:row-span-4 relative overflow-hidden rounded-sm bg-earth-200">
+            <img src="Input/IMG_0960.jpg" alt="Troupeau de Highland dans les prés d'Auvergne" className="w-full h-full object-cover scale-[1.2]" onError={(e) => {e.currentTarget.style.display = 'none';}} />
+            <div className="absolute bottom-3 left-3 text-cream-50 text-[10px] uppercase tracking-[0.25em] bg-forest-900/40 backdrop-blur px-2 py-1 rounded">Gorges de l'Allier</div>
+          </div>
+          {/* Portrait Highland */}
+          <div className="col-span-1 sm:col-span-2 sm:row-span-3 relative overflow-hidden rounded-sm bg-earth-200">
+            <img src="Input/whatsapp_farm.jpg" alt="Highland en gros plan" className="w-full h-full object-cover" onError={(e) => {e.currentTarget.style.display = 'none';}} />
+          </div>
+          {/* Stat box — 3 générations */}
+          <div className="col-span-1 sm:col-span-2 sm:row-span-3 relative overflow-hidden rounded-sm bg-forest-700 text-cream-50 p-4 sm:p-6 flex flex-col justify-between">
+            <div className="font-display leading-none tracking-tighter text-[3.5rem] sm:text-[5rem] lg:text-[7rem]">3</div>
+            <div>
+              <div className="font-display text-base sm:text-xl lg:text-2xl leading-tight tracking-tight">Générations<br />d'agriculteurs</div>
+            </div>
+          </div>
+          {/* Bottom image — col-span-4 on desktop to close the gap */}
+          <div className="col-span-2 sm:col-span-4 sm:row-span-2 relative overflow-hidden rounded-sm bg-earth-200">
+            <img src="Input/IMG_0804.jpg" alt="Pâturage en Auvergne" className="w-full h-full object-cover" onError={(e) => {e.currentTarget.style.display = 'none';}} />
+          </div>
+        </div>
+      </Reveal>
+    </div>
+  </section>;
+
+const Elevage = () => {
+  const traits = [
+  { icon: "Snowflake", title: "Rusticité légendaire", body: "Originaire des Highlands d'Écosse, elles affrontent neige et vent — un atout pour notre climat de haute montagne." },
+  { icon: "Leaf", title: "100 % herbe et foin bio", body: "Aucun ensilage, aucun concentré industriel. Uniquement les prairies de la ferme et le foin récolté l'été." },
+  { icon: "Heart", title: "Croissance lente", body: "Quatre ans en moyenne avant l'abattage. Une viande persillée, maigre et pauvre en cholestérol." },
+  { icon: "Trees", title: "Plein air intégral", body: "Mises bas dans les prés, abris naturels, troupeau stable — un cadre de vie qui se goûte dans l'assiette." }];
+  return (
+    <section id="elevage" className="relative bg-forest-900 text-cream-50 py-28 lg:py-40 overflow-hidden grain">
+      <div className="absolute inset-0 opacity-[0.07] pointer-events-none">
+        <svg viewBox="0 0 800 600" className="w-full h-full" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <pattern id="rows" width="60" height="60" patternUnits="userSpaceOnUse">
+              <path d="M0 30 H60" stroke="#f6efe1" strokeWidth="0.4" />
+            </pattern>
+          </defs>
+          <rect width="800" height="600" fill="url(#rows)" />
+        </svg>
+      </div>
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-10">
+        <div className="grid lg:grid-cols-12 gap-10 lg:gap-16 items-end mb-16 lg:mb-24">
+          <div className="lg:col-span-7">
+            <div className="text-xs uppercase tracking-[0.3em] text-terracotta-300 flex items-center gap-3">
+              <span className="w-6 h-px bg-terracotta-300" />
+              Notre Élevage
+            </div>
+            <h2 className="font-display mt-5 text-5xl lg:text-7xl leading-[0.95] tracking-tight">
+              La <span className="italic">Highland</span>,<br />
+              une vache d'un autre temps.
+            </h2>
+          </div>
+          <p className="lg:col-span-5 text-cream-100/80 text-lg leading-relaxed">
+            La Highland cattle est dotée d'une épaisse toison, elle ne développe pas
+            de gras sous-cutané pour se garder au chaud pendant la saison froide.
+            C'est une espèce très rustique à croissance lente et de petit gabarit.
+            Elle possède un beau persillage qui contribue à la tendresse, au goût et à
+            la jutosité de la viande pour une qualité gustative supérieure.
+          </p>
+        </div>
+        <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
+          <Reveal className="lg:col-span-5">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-sm bg-forest-800">
+              <img src="Input/IMG_1968.jpg" alt="Vache Highland avec sa toison rousse" className="w-full h-full object-cover" onError={(e) => {e.currentTarget.style.display = 'none';}} />
+              <div className="absolute top-4 left-4 right-4 flex items-center justify-between text-[10px] uppercase tracking-[0.25em] text-cream-50/90">
+                <span>Highland Cattle</span>
+                <span>Bos taurus · Kyloe</span>
+              </div>
+              <div className="absolute bottom-0 inset-x-0 p-6 bg-gradient-to-t from-forest-900 via-forest-900/60 to-transparent">
+                <div className="flex items-end justify-between">
+                  <div>
+                    <div className="font-display text-3xl">Mac Iain</div>
+                    <div className="text-xs uppercase tracking-[0.2em] text-cream-100/70 mt-1">Taureau · 7 ans · 720 kg</div>
+                  </div>
+                  <Icon name="Award" size={24} className="text-terracotta-300" />
+                </div>
+              </div>
+            </div>
+          </Reveal>
+          <div className="lg:col-span-7 grid sm:grid-cols-2 gap-px bg-forest-700/60">
+            {traits.map((t, i) =>
+            <Reveal key={i} delay={i * 80} className="bg-forest-900 p-8 lg:p-10 flex flex-col gap-5">
+                <div className="flex items-center justify-between">
+                  <span className="w-12 h-12 rounded-full bg-cream-50/5 ring-1 ring-cream-50/15 inline-flex items-center justify-center text-cream-50">
+                    <Icon name={t.icon} size={22} strokeWidth={1.4} />
+                  </span>
+                  <span className="font-display italic text-cream-100/40 text-sm">0{i + 1}</span>
+                </div>
+                <h3 className="font-display text-2xl lg:text-3xl leading-tight">{t.title}</h3>
+                <p className="text-cream-100/70 text-[15px] leading-relaxed">{t.body}</p>
+              </Reveal>
+            )}
+          </div>
+        </div>
+      </div>
+    </section>);
+};
+
+const Produits = () => {
+  const pieces = "Côte de bœuf, basse côte, rôti à braisser, pièce à fondu, pot au feu, bourguignon, beefsteak, bavette, steaks hachés";
+  const boxes = [
+  { weight: "5 kg",  label: "Découverte", price: "≈ 90 €",  priceKg: "18 €/kg", pieces, note: "Idéale pour découvrir." },
+  { weight: "10 kg", label: "Familiale",  price: "≈ 180 €", priceKg: "18 €/kg", pieces, note: "Notre format le plus demandé.", featured: true }];
+  return (
+    <section id="produits" className="relative bg-cream-100 py-28 lg:py-40">
+      <div className="max-w-7xl mx-auto px-6 lg:px-10">
+        <div className="grid lg:grid-cols-12 gap-10 mb-16 lg:mb-24 items-end">
+          <div className="lg:col-span-7">
+            <div className="text-xs uppercase tracking-[0.3em] text-terracotta-500 flex items-center gap-3">
+              <span className="w-6 h-px bg-terracotta-400" />
+              Nos Produits
+            </div>
+            <h2 className="font-display mt-5 text-5xl lg:text-7xl leading-[0.95] tracking-tight text-forest-900">
+              Caissettes de viande,<br />
+              <span className="italic">de la prairie à votre table.</span>
+            </h2>
+          </div>
+          <p className="lg:col-span-5 text-earth-700 text-lg leading-relaxed">
+            La vente directe, c'est une bête à la fois — partagée entre quelques familles.
+            Chaque caissette est préparée par notre boucher partenaire, sous vide,
+            prête à congéler ou à savourer.
+          </p>
+        </div>
+        <div className="grid md:grid-cols-2 gap-6">
+          {boxes.map((b, i) =>
+          <Reveal key={i} delay={i * 100}>
+              <article className={`relative h-full p-8 lg:p-10 flex flex-col gap-6 transition border ${
+            b.featured ?
+            "bg-forest-800 text-cream-50 border-forest-800 shadow-xl shadow-forest-900/10" :
+            "bg-cream-50 text-forest-900 border-earth-200 hover:border-earth-300"}`
+            }>
+                {b.featured &&
+              <span className="absolute -top-3 left-8 bg-terracotta-500 text-cream-50 text-[10px] tracking-[0.25em] uppercase px-3 py-1 rounded-full">
+                    Recommandée
+                  </span>
+              }
+                <header className="flex items-baseline justify-between">
+                  <div className={`text-xs uppercase tracking-[0.25em] ${b.featured ? "text-cream-100/70" : "text-earth-500"}`}>{b.label}</div>
+                  <Icon name="Package" size={20} strokeWidth={1.4} className={b.featured ? "text-terracotta-300" : "text-forest-600"} />
+                </header>
+                <div>
+                  <div className="font-display text-6xl lg:text-7xl tracking-tight leading-none">{b.weight}</div>
+                  <div className={`mt-3 font-display text-xl ${b.featured ? "text-cream-100/90" : "text-earth-700"}`}>{b.price}</div>
+                  <div className={`text-xs uppercase tracking-[0.18em] mt-1 ${b.featured ? "text-cream-100/60" : "text-earth-500"}`}>{b.priceKg}</div>
+                </div>
+                <div className={`hairline ${b.featured ? "opacity-40" : ""}`} />
+                <p className={`text-sm leading-relaxed ${b.featured ? "text-cream-100/80" : "text-earth-700"}`}>
+                  <span className="block uppercase tracking-[0.18em] text-[10px] mb-2 opacity-70">Composition</span>
+                  {b.pieces}
+                </p>
+                <p className={`font-display italic text-base ${b.featured ? "text-cream-50" : "text-forest-800"}`}>
+                  {b.note}
+                </p>
+                <a href="commande.html" className={`mt-auto inline-flex items-center justify-between gap-2 px-5 py-3 rounded-full text-sm transition ${
+              b.featured ?
+              "bg-cream-50 text-forest-900 hover:bg-cream-100" :
+              "bg-forest-900 text-cream-50 hover:bg-forest-800"}`
+              }>
+                  Réserver cette caissette
+                  <Icon name="ArrowRight" size={16} />
+                </a>
+              </article>
+            </Reveal>
+          )}
+        </div>
+        <div className="mt-20 grid sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 border-t border-earth-200 pt-12">
+          {[
+          { i: "Truck", t: "Retrait à la ferme", s: "Ou en livraison en fonction des commandes" },
+          { i: "Snowflake", t: "Sous vide & congelé", s: "Conservation jusqu'à 12 mois" },
+          { i: "ShieldCheck", t: "Traçabilité totale", s: "De la naissance à la caissette" },
+          { i: "HandCoins", t: "Sans intermédiaire", s: "Vous payez le travail, pas la marge" }].
+          map((x, k) =>
+          <div key={k} className="flex items-start gap-4">
+              <span className="shrink-0 w-11 h-11 rounded-full bg-forest-900 text-cream-50 inline-flex items-center justify-center">
+                <Icon name={x.i} size={20} strokeWidth={1.4} />
+              </span>
+              <div>
+                <div className="font-display text-lg text-forest-900">{x.t}</div>
+                <div className="text-sm text-earth-600 mt-1">{x.s}</div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </section>);
+};
+
+const Reservation = () => {
+  return (
+    <section id="reserver" className="relative bg-terracotta-500 text-cream-50 overflow-hidden grain">
+      <div aria-hidden="true" className="absolute -top-32 -right-32 w-[600px] h-[600px] rounded-full bg-terracotta-400/40 blur-3xl pointer-events-none" />
+      <div aria-hidden="true" className="absolute -bottom-40 -left-20 w-[500px] h-[500px] rounded-full bg-terracotta-700/40 blur-3xl pointer-events-none" />
+      <div className="relative bg-terracotta-700 text-cream-100/90 text-[11px] uppercase tracking-[0.4em] py-3 overflow-hidden">
+        <div className="marquee inline-flex whitespace-nowrap">
+          {Array.from({ length: 14 }).map((_, i) =>
+          <span key={i} className="px-6 inline-flex items-center gap-3">
+              Prochain abattage · Juin 2026 <span className="text-cream-50/60">◆</span>
+              Réservations ouvertes <span className="text-cream-50/60">◆</span>
+              Édition limitée · 12 caissettes <span className="text-cream-50/60">◆</span>
+            </span>
+          )}
+        </div>
+      </div>
+      <div className="relative max-w-7xl mx-auto px-6 lg:px-10 py-32 lg:py-44">
+        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+          <div className="lg:col-span-7">
+            <div className="inline-flex items-center gap-3 text-cream-100/90 text-xs uppercase tracking-[0.35em]">
+              <span className="w-2 h-2 rounded-full bg-cream-50 animate-pulse" />
+              Réservation 2026
+            </div>
+            <h2 className="font-display mt-6 text-[clamp(3rem,9vw,8rem)] leading-[0.9] tracking-[-0.02em]">
+              Réservez<br />
+              <span className="italic">votre caissette.</span>
+            </h2>
+            <p className="mt-8 max-w-xl text-cream-50/90 text-lg lg:text-xl leading-relaxed">
+              Chaque année nous proposons un nombre limité de caissettes.
+              Premier arrivé, premier servi. S'il n'y a plus de caissette disponible,
+              votre commande sera prise en compte pour la prochaine découpe.
+            </p>
+            <ol className="mt-12 grid sm:grid-cols-3 gap-6">
+              {[
+              { n: "01", t: "Choisissez", s: "Format 5 ou 10 kg." },
+              { n: "02", t: "Réservez", s: "Pas d'acompte demandé." },
+              { n: "03", t: "Récupérez", s: "Retrait à la ferme ou livraison." }].
+              map((s, i) =>
+              <li key={i} className="border-t border-cream-50/40 pt-4">
+                  <div className="font-display text-cream-50/70 text-sm">{s.n}</div>
+                  <div className="font-display text-2xl mt-1">{s.t}</div>
+                  <div className="text-sm text-cream-50/80 mt-1.5 leading-relaxed">{s.s}</div>
+                </li>
+              )}
+            </ol>
+            <div className="mt-14 flex flex-col sm:flex-row items-start sm:items-center gap-6">
+              <a href="commande.html"
+              className="group relative flex sm:inline-flex items-center justify-between sm:justify-start gap-5 bg-cream-50 hover:bg-white text-forest-900 pl-8 pr-4 py-5 rounded-full text-lg font-medium tracking-tight transition shadow-2xl shadow-terracotta-900/30">
+                <span>Réserver ma caissette en ligne</span>
+                <span className="w-12 h-12 rounded-full bg-forest-900 text-cream-50 inline-flex items-center justify-center transition group-hover:scale-105 group-hover:rotate-[-8deg]">
+                  <Icon name="ArrowUpRight" size={22} />
+                </span>
+              </a>
+              <div className="text-cream-50/85 text-sm leading-snug">
+                <div className="flex items-center gap-2"><Icon name="ShieldCheck" size={14} /> Pas d'acompte demandé</div>
+                <div className="flex items-center gap-2 mt-1"><Icon name="Phone" size={14} /> Ou par téléphone : 07-83-51-78-94</div>
+              </div>
+            </div>
+          </div>
+          <div className="lg:col-span-5">
+            <div className="relative bg-cream-50 text-forest-900 p-8 lg:p-10 rounded-sm shadow-2xl shadow-terracotta-900/30 -rotate-1">
+              <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex items-center justify-between px-2 pointer-events-none">
+                <span className="w-4 h-4 rounded-full bg-terracotta-500 -translate-x-1/2" />
+                <span className="w-4 h-4 rounded-full bg-terracotta-500 translate-x-1/2" />
+              </div>
+              <div className="absolute inset-x-10 top-1/2 -translate-y-1/2 border-t border-dashed border-earth-300" />
+              <div className="flex items-start justify-between">
+                <div>
+                  <div className="text-[10px] uppercase tracking-[0.3em] text-earth-500">Bon de réservation</div>
+                  <div className="font-display text-3xl mt-2 leading-tight">Saison 2026</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-[10px] uppercase tracking-[0.3em] text-earth-500">N°</div>
+                  <div className="font-display text-2xl mt-1">012 / 12</div>
+                </div>
+              </div>
+              <div className="hairline my-6" />
+              <dl className="space-y-3 text-sm">
+                <div className="flex justify-between"><dt className="text-earth-500 uppercase tracking-[0.18em] text-[10px]">Bête</dt><dd className="font-display">Highland · 48 mois</dd></div>
+                <div className="flex justify-between"><dt className="text-earth-500 uppercase tracking-[0.18em] text-[10px]">Origine</dt><dd className="font-display">St-Christophe-d'Allier</dd></div>
+                <div className="flex justify-between"><dt className="text-earth-500 uppercase tracking-[0.18em] text-[10px]">Caissettes</dt><dd className="font-display">5 / 10 kg</dd></div>
+                <div className="flex justify-between"><dt className="text-earth-500 uppercase tracking-[0.18em] text-[10px]">Préparation</dt><dd className="font-display">Sous vide, congelée</dd></div>
+              </dl>
+              <div className="mt-12 pt-6 border-t border-dashed border-earth-300 flex items-end justify-between">
+                <div>
+                  <div className="text-[10px] uppercase tracking-[0.3em] text-earth-500">À retirer</div>
+                  <div className="font-display text-xl mt-1">Juin 2026</div>
+                </div>
+                <div className="text-right">
+                  <div className="text-[10px] uppercase tracking-[0.3em] text-earth-500">Reste</div>
+                  <div className="font-display text-2xl mt-1 text-terracotta-600">3 places</div>
+                </div>
+              </div>
+            </div>
+            <div className="mt-6 flex items-center gap-3 text-cream-50/80 text-xs uppercase tracking-[0.25em]">
+              <Icon name="Info" size={14} />
+              <span>Bon valable une bête · saison 2026</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>);
+};
+
+const Footer = () =>
+<footer className="bg-forest-900 text-cream-100/80 pt-24 pb-10 grain">
+    <div className="max-w-7xl mx-auto px-6 lg:px-10">
+      <div className="grid lg:grid-cols-12 gap-12 pb-16 border-b border-cream-50/15">
+        <div className="lg:col-span-5">
+          <Logo dark={true} />
+          <p className="mt-6 text-cream-100/70 max-w-md leading-relaxed">
+            Élevage paysan de vaches Highland en Haute-Loire.
+            Une famille, un troupeau, une terre.
+          </p>
+          <div className="mt-8 flex items-center gap-3">
+            {["Instagram", "Facebook", "Mail"].map((s) =>
+          <a key={s} href="#" aria-label={s} className="w-10 h-10 rounded-full ring-1 ring-cream-50/20 hover:bg-cream-50 hover:text-forest-900 inline-flex items-center justify-center transition">
+                <Icon name={s} size={16} strokeWidth={1.6} />
+              </a>
+          )}
+          </div>
+        </div>
+        <div className="lg:col-span-3">
+          <div className="text-xs uppercase tracking-[0.3em] text-terracotta-300 mb-5">Nous trouver</div>
+          <address className="not-italic font-display text-cream-50 text-lg leading-snug">
+            Ferme des Val'Lands<br />
+            Lieu-dit Les Vals<br />
+            43340 Saint-Christophe-d'Allier<br />
+            Haute-Loire · Auvergne
+          </address>
+        </div>
+        <div className="lg:col-span-2">
+          <div className="text-xs uppercase tracking-[0.3em] text-terracotta-300 mb-5">Contact</div>
+          <ul className="space-y-2.5 text-cream-50">
+            <li className="flex items-center gap-2"><Icon name="Phone" size={14} /> 07-83-51-78-94</li>
+            <li className="flex items-center gap-2"><Icon name="Mail" size={14} /> lafermedesvallands@gmail.com</li>
+            <li className="flex items-center gap-2"><Icon name="Clock" size={14} /> Visites sur rdv</li>
+          </ul>
+        </div>
+        <div className="lg:col-span-2">
+          <div className="text-xs uppercase tracking-[0.3em] text-terracotta-300 mb-5">Navigation</div>
+          <ul className="space-y-2.5">
+            <li><a href="#terroir" className="hover:text-cream-50">Le terroir</a></li>
+            <li><a href="#elevage" className="hover:text-cream-50">L'élevage</a></li>
+            <li><a href="#produits" className="hover:text-cream-50">Caissettes</a></li>
+            <li><a href="#reserver" className="hover:text-cream-50">Réserver</a></li>
+          </ul>
+        </div>
+      </div>
+      <div className="py-12">
+        <div className="font-display text-cream-50/95 text-[clamp(3rem,14vw,16rem)] leading-[0.85] tracking-[-0.04em] flex items-baseline justify-between flex-wrap gap-x-6">
+          <span>Val'Lands</span>
+          <span className="italic font-light text-cream-50/30 text-[clamp(1rem,2vw,1.5rem)] tracking-widest uppercase">Auvergne · MMXXVI</span>
+        </div>
+      </div>
+      <div className="flex flex-col md:flex-row justify-between gap-4 text-xs text-cream-100/50">
+        <div>© 2026 Ferme des Val'Lands · SIRET 000 000 000 00000</div>
+        <div className="flex flex-wrap gap-6">
+          <a href="#" className="hover:text-cream-50">Mentions légales</a>
+          <a href="#" className="hover:text-cream-50">Politique de confidentialité</a>
+          <a href="#" className="hover:text-cream-50">CGV</a>
+        </div>
+      </div>
+    </div>
+  </footer>;
+
+const App = () =>
+<main className="bg-cream-50 text-forest-900">
+    <Header />
+    <Hero />
+    <Marquee />
+    <Terroir />
+    <Elevage />
+    <Produits />
+    <Reservation />
+    <Footer />
+  </main>;
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

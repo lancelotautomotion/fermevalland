@@ -101,29 +101,116 @@ const Logo = ({ className = "", dark = false }) =>
   </a>;
 
 const Header = () => {
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled,  setScrolled]  = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
+  const navLinks = [
+    { href: "#terroir",  label: "Le terroir"  },
+    { href: "#elevage",  label: "L'élevage"   },
+    { href: "#produits", label: "Caissettes"  },
+    { href: "#reserver", label: "Réserver"    },
+  ];
+
   return (
-    <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${scrolled ? "bg-white border-b border-earth-200/60 shadow-sm" : "bg-transparent"}`}>
-      <div className="max-w-7xl mx-auto px-6 lg:px-10 h-20 flex items-center justify-between">
-        <Logo dark={!scrolled} />
-        <nav className={`hidden md:flex items-center gap-8 text-sm transition-colors ${scrolled ? "text-forest-800/80" : "text-cream-50/90"}`}>
-          <a href="#terroir" className={`transition ${scrolled ? "hover:text-forest-900" : "hover:text-white"}`}>Le terroir</a>
-          <a href="#elevage" className={`transition ${scrolled ? "hover:text-forest-900" : "hover:text-white"}`}>L'élevage</a>
-          <a href="#produits" className={`transition ${scrolled ? "hover:text-forest-900" : "hover:text-white"}`}>Caissettes</a>
-          <a href="#reserver" className={`transition ${scrolled ? "hover:text-forest-900" : "hover:text-white"}`}>Réserver</a>
+    <>
+      <header className={`fixed inset-x-0 top-0 z-50 transition-all duration-300 ${scrolled ? "bg-white border-b border-earth-200/60 shadow-sm" : "bg-transparent"}`}>
+        <div className="max-w-7xl mx-auto px-6 lg:px-10 h-20 flex items-center justify-between">
+          <Logo dark={!scrolled} />
+          <nav className={`hidden md:flex items-center gap-8 text-sm transition-colors ${scrolled ? "text-forest-800/80" : "text-cream-50/90"}`}>
+            {navLinks.map(l =>
+              <a key={l.href} href={l.href} className={`transition ${scrolled ? "hover:text-forest-900" : "hover:text-white"}`}>{l.label}</a>
+            )}
+          </nav>
+          <div className="flex items-center gap-3">
+            <a href="commande.html" className="hidden md:inline-flex group items-center gap-2 bg-terracotta-500 hover:bg-terracotta-600 text-cream-50 px-5 py-2.5 rounded-full text-sm font-medium tracking-wide transition shadow-sm shadow-terracotta-500/20">
+              Commander
+              <Icon name="ArrowUpRight" size={16} className="transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </a>
+            <button
+              onClick={() => setMenuOpen(true)}
+              aria-label="Ouvrir le menu"
+              aria-expanded={menuOpen}
+              className={`md:hidden w-10 h-10 flex flex-col items-center justify-center gap-[5px] rounded-full transition focus-visible:ring-2 focus-visible:ring-terracotta-400 ${scrolled ? "text-forest-900 hover:bg-earth-100" : "text-cream-50 hover:bg-cream-50/10"}`}
+            >
+              <span className="w-5 h-px bg-current block rounded-full" />
+              <span className="w-5 h-px bg-current block rounded-full" />
+              <span className="w-3.5 h-px bg-current block rounded-full self-end" />
+            </button>
+          </div>
+        </div>
+      </header>
+
+      {/* Backdrop */}
+      <div
+        onClick={() => setMenuOpen(false)}
+        aria-hidden="true"
+        className={`md:hidden fixed inset-0 z-[60] bg-forest-900/50 backdrop-blur-sm transition-opacity duration-300 ${menuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+      />
+
+      {/* Sidebar drawer */}
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu de navigation"
+        className={`md:hidden fixed top-0 right-0 bottom-0 z-[70] w-[min(300px,85vw)] bg-cream-50 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out ${menuOpen ? "translate-x-0" : "translate-x-full"}`}
+      >
+        <div className="flex items-center justify-between px-6 h-20 border-b border-earth-200 shrink-0">
+          <Logo dark={false} />
+          <button
+            onClick={() => setMenuOpen(false)}
+            aria-label="Fermer le menu"
+            className="w-9 h-9 rounded-full hover:bg-earth-100 flex items-center justify-center text-forest-900 transition"
+          >
+            <Icon name="X" size={20} />
+          </button>
+        </div>
+        <nav aria-label="Menu principal" className="flex flex-col px-6 py-4 overflow-y-auto flex-1">
+          {navLinks.map(l =>
+            <a
+              key={l.href}
+              href={l.href}
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center justify-between font-display text-2xl text-forest-900 py-4 border-b border-earth-100 last:border-0 hover:text-terracotta-600 transition"
+            >
+              {l.label}
+              <Icon name="ChevronRight" size={18} className="text-earth-300" />
+            </a>
+          )}
         </nav>
-        <a href="commande.html" className="group inline-flex items-center gap-2 bg-terracotta-500 hover:bg-terracotta-600 text-cream-50 px-5 py-2.5 rounded-full text-sm font-medium tracking-wide transition shadow-sm shadow-terracotta-500/20">
-          Commander
-          <Icon name="ArrowUpRight" size={16} className="transition group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-        </a>
+        <div className="px-6 pb-8 pt-4 border-t border-earth-100 shrink-0">
+          <a
+            href="commande.html"
+            className="flex items-center justify-between bg-terracotta-500 hover:bg-terracotta-600 text-cream-50 px-6 py-4 rounded-full font-medium transition"
+          >
+            <span>Commander en ligne</span>
+            <Icon name="ArrowUpRight" size={18} />
+          </a>
+          <div className="mt-5 space-y-2.5 text-sm text-earth-600">
+            <a href="tel:0783517894" className="flex items-center gap-2.5 hover:text-forest-900 transition">
+              <Icon name="Phone" size={14} strokeWidth={1.6} />
+              <span>07-83-51-78-94</span>
+            </a>
+            <a href="mailto:lafermedesvallands@gmail.com" className="flex items-center gap-2.5 hover:text-forest-900 transition">
+              <Icon name="Mail" size={14} strokeWidth={1.6} />
+              <span>lafermedesvallands@gmail.com</span>
+            </a>
+          </div>
+        </div>
       </div>
-    </header>);
+    </>
+  );
 };
 
 const Hero = () =>
@@ -221,12 +308,12 @@ const Terroir = () =>
           Nous croyons à un élevage paysan, ancré, naturel où la qualité se cultive
           dans la lenteur des saisons.
         </p>
-        <div className="mt-10 flex items-center gap-6">
+        <div className="mt-10 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-6">
           <div className="flex items-center gap-3 text-forest-800">
             <Icon name="Mountain" size={22} strokeWidth={1.4} />
             <span className="font-display text-lg">1 000 m d'altitude</span>
           </div>
-          <span className="w-px h-8 bg-earth-300" />
+          <span className="hidden sm:block w-px h-8 bg-earth-300" />
           <div className="flex items-center gap-3 text-forest-800">
             <Icon name="MapPin" size={22} strokeWidth={1.4} />
             <span className="font-display text-lg">Les gorges de l'Allier</span>
@@ -235,7 +322,7 @@ const Terroir = () =>
       </Reveal>
 
       <Reveal delay={150} className="lg:col-span-7 order-1 lg:order-2">
-        <div className="grid grid-cols-6 grid-rows-6 gap-4 h-[560px]">
+        <div className="grid grid-cols-6 grid-rows-6 gap-3 sm:gap-4 h-[400px] sm:h-[480px] lg:h-[560px]">
           <div className="col-span-4 row-span-4 relative overflow-hidden rounded-sm bg-earth-200">
             <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1400&q=80" alt="Paysage volcanique d'Auvergne" className="w-full h-full object-cover" onError={(e) => {e.currentTarget.style.display = 'none';}} />
             <div className="absolute bottom-3 left-3 text-cream-50 text-[10px] uppercase tracking-[0.25em] bg-forest-900/40 backdrop-blur px-2 py-1 rounded">Gorges de l'Allier</div>
@@ -359,7 +446,7 @@ const Produits = () => {
           <p className="lg:col-span-5 text-earth-700 text-lg leading-relaxed">
             La vente directe, c'est une bête à la fois — partagée entre quelques familles.
             Chaque caissette est préparée par notre boucher partenaire, sous vide,
-            prête à congeler ou à savourer.
+            prête à congéler ou à savourer.
           </p>
         </div>
         <div className="grid md:grid-cols-2 gap-6">
@@ -473,9 +560,9 @@ const Reservation = () => {
             </ol>
             <div className="mt-14 flex flex-col sm:flex-row items-start sm:items-center gap-6">
               <a href="commande.html"
-              className="group relative inline-flex items-center gap-5 bg-cream-50 hover:bg-white text-forest-900 pl-8 pr-4 py-5 rounded-full text-lg lg:text-xl font-medium tracking-tight transition shadow-2xl shadow-terracotta-900/30">
+              className="group relative flex sm:inline-flex items-center justify-between sm:justify-start gap-5 bg-cream-50 hover:bg-white text-forest-900 pl-8 pr-4 py-5 rounded-full text-lg font-medium tracking-tight transition shadow-2xl shadow-terracotta-900/30">
                 <span>Réserver ma caissette en ligne</span>
-                <span className="w-12 h-12 lg:w-14 lg:h-14 rounded-full bg-forest-900 text-cream-50 inline-flex items-center justify-center transition group-hover:scale-105 group-hover:rotate-[-8deg]">
+                <span className="w-12 h-12 rounded-full bg-forest-900 text-cream-50 inline-flex items-center justify-center transition group-hover:scale-105 group-hover:rotate-[-8deg]">
                   <Icon name="ArrowUpRight" size={22} />
                 </span>
               </a>

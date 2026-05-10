@@ -184,7 +184,7 @@ const SuccessScreen = ({ prenom, caissette, steaks }) => (
         <Icon name="CheckCircle" size={42} strokeWidth={1.3} className="text-forest-600" />
       </div>
       <h1 className="font-display text-4xl lg:text-5xl text-forest-900 leading-[1.1] tracking-tight">
-        Merci {prenom}&nbsp;!<br />
+        Merci {prenom} !<br />
         <span className="italic text-forest-600">On revient vers vous vite.</span>
       </h1>
       <p className="mt-6 text-earth-700 text-lg leading-relaxed">
@@ -390,9 +390,9 @@ const OrderForm = () => {
             </div>
           )}
 
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-5 pt-2">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-5 pt-2">
             <button type="submit" disabled={submitting}
-              className="group inline-flex items-center gap-4 bg-forest-800 hover:bg-forest-900 disabled:opacity-60 disabled:cursor-not-allowed text-cream-50 pl-7 pr-4 py-4 rounded-full text-base font-medium tracking-tight transition shadow-lg shadow-forest-900/20">
+              className="group flex sm:inline-flex items-center justify-between sm:justify-start gap-4 bg-forest-800 hover:bg-forest-900 disabled:opacity-60 disabled:cursor-not-allowed text-cream-50 pl-7 pr-4 py-4 rounded-full text-base font-medium tracking-tight transition shadow-lg shadow-forest-900/20">
               {submitting ? (
                 <><span>Envoi en cours…</span><span className="w-10 h-10 rounded-full bg-white/10 inline-flex items-center justify-center animate-spin"><Icon name="Loader2" size={18} /></span></>
               ) : (
